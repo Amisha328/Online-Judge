@@ -1,13 +1,8 @@
-    .form-container{
-      height: auto;
-      width: 100vw;
-    }
-    .card{
-      height: auto;
-      width: 500px;
-      box-shadow: 0px 4px 16px 0px grey;
+      .form-container{
+        height: auto;
+        width: 100vw;
       }
-      
+            
       .title{
         display: flex;
         justify-content: center;
@@ -34,12 +29,9 @@
           border: 2px solid #ddd;
           border-radius: 5px;
         }
-        
-        .card form{
-          margin: 30px;
-        }
+       
 
-        .register-btn {
+        .login-btn{
           padding: 5px;
           border-radius: 10px;
           border: none;
@@ -48,39 +40,24 @@
           /* background-color: #826020; */
           font-size: 16px;
         }
-        
-        .form-submit-container{
-          display: flex;
-          flex-direction: column;
-          gap: 5px;
-          margin-top: 20px;
-        }
-        
-        .login{
-          display: flex;
-          font-size: 15px;
-          column-gap: 5px;
-        }
-        .register-btn .login{
-          display: flex;
-          flex-direction: row;
-        }
-      
-        .register-btn:disabled {
+
+        .login-btn:disabled {
           opacity: 0.5;
           cursor: not-allowed;
-        }
-        
-        .error-prompt{
-          color: red;
-          font-size: 15px;
-          font-style: italic;
         }
       
         a{
           text-decoration: none;
         }
 
+        .form-submit-container{
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+          margin-top: 20px;
+        }
+
+        
         .google-btn {
           padding: 5px;
           border-radius: 10px;
@@ -118,5 +95,19 @@
         }
 
 
+      .login-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
+      .signup-link {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
 
+      .forgot-password {
+        display: flex;
+        align-items: center;
+      }

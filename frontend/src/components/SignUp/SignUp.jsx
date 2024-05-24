@@ -1,23 +1,27 @@
 // https://github.com/Amisha328/Online-Judge
 
-import { useState } from "react";
+import { useState} from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './SignUp.css';
 import { FaGoogle } from 'react-icons/fa';
+import { useNavigate, Link } from 'react-router-dom'
+import axios from 'axios';
 
 function SignUp() {
-  
+  let navigate = useNavigate();
   const [user, setUser] = useState({
     name: "",
     phoneNo: "",
     email: "",
     password: "",
   });
+
   const [messages, setMessages] = useState({
     name: "",
     phoneNo: "",
     email: "",
     password: "",
+    server: ""
   });
   
   const [touched, setTouched] = useState({
@@ -27,7 +31,6 @@ function SignUp() {
     password: false,
   });
   
-
   function validateName(name){
     console.log("Validate name called");
     console.log(name);
@@ -83,8 +86,6 @@ function SignUp() {
     }
   }
   function validatePassword(password){
-    // console.log("PasswordValidation "+password);
-    // console.log("Password length: "+ password.toString().length);
     
     if(password.toString().length < 8 || password.toString().length > 12) {
       setMessages({
@@ -172,12 +173,39 @@ function SignUp() {
       return false;
     }
 
-    
-    const handleRegister = (event) => {
+    const handleRegister = async (event) => {
       event.preventDefault();
       console.log(
         `Name: ${user.name} phoneNo: ${user.phoneNo} Email: ${user.email} Password: ${user.password}`
       );
+      
+      // try{
+      //     const response = await fetch("http://localhost:5000/signup", {
+      //       method: "POST",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //       body:JSON.stringify(user),
+      //     });
+      //     console.log(response);
+      //   } 
+      // catch(error){
+      //   console.log('There was an error registering the user!', error);
+      // }
+
+      try {
+        const response = await axios.post("http://localhost:5000/signup", user);
+        console.log(response);
+        navigate('/login');
+      } catch (error) {
+        if (error.response && error.response.data) {
+          setMessages({ ...messages, server: error.response.data });
+        } else {
+          setMessages({ ...messages, server: "An error occurred. Please try again." });
+        }
+      }
+    
+     // navigate('/login');
     };
     return (
       <>
@@ -189,7 +217,7 @@ function SignUp() {
       </div>
       </nav>
           
-      <div className="container-fluid d-flex align-items-center justify-content-center vh-100">
+      <div className="form-container container-fluid d-flex align-items-center justify-content-center vh-100">
           <div className="card">
         <form>
           <h2 className="title">SignUp</h2>
@@ -247,9 +275,10 @@ function SignUp() {
                       Register
                     </button>
                     <div className="login">
-                      <a className ="signup-link" href="/">Login</a>
+                      <Link className ="signup-link" to="/login">Login</Link>
                       <span>with your existing account</span>
                     </div>
+                    {messages.server && <div className="error-prompt">{messages.server}</div>}
                     <div className="or">OR</div>
                     <button className="google-btn">
                         <FaGoogle className="google-icon"/> Sign up with Google
