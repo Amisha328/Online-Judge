@@ -44,8 +44,12 @@ exports.newUser = async (req, res) => {
     user.token = token;
     user.password = undefined;
 
-    res.status(200).json({ message: "You have successfully registered!", user });
+    res.cookie("token", token, {
+      withCredentials: true,
+      httpOnly: true,
+    });
 
+    res.status(200).json({ message: "You have successfully registered!", user });
   } 
   catch (error) {
     console.log(error);
@@ -81,34 +85,33 @@ exports.loginUser = async (req, res) => {
       });
     }
 
-    // generate a token for user and send it
     const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
       expiresIn: "1d",
     });
     user.token = token;
     user.password = undefined;
 
-    // store token in cookies with options
     const options = {
-      expire: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-      httpOnly: true, // only manipulate by server not by client/frontend
+      expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+      httpOnly: true,
     };
 
-    // send the token
+   // send the token
     res.status(200).cookie("token", token, options).json({
       message: "You have successfully logged in!",
       success: true,
       token,
     });
+
+
   } catch (error) {
-    res.status(500).json({
+    res.status(400).json({
       status: 'fail',
       message: error.message,
     });
     console.log(error.message);
   }
 };
-
 
 exports.invalid = async (req, res) => {
           res.status(404).json({

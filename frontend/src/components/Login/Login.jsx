@@ -4,8 +4,11 @@ import { useState } from "react";
 import { FaGoogle } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+
 
 export default function Login() {
+  axios.defaults.withCredentials = true;
   let navigate = useNavigate();
   const [user, setUser] = useState({
     email: "",
@@ -116,44 +119,59 @@ export default function Login() {
           return false;
         }
     
-        
+        const handleError = (err) =>
+            toast.error(err, {
+              position: "bottom-left",
+        });
+        const handleSuccess = (msg) =>
+            toast.success(msg, {
+              position: "bottom-left",
+        });
+
         const handleLogin = async (event) => {
           event.preventDefault();
-          console.log(
-            `Email: ${user.email} Password: ${user.password}`
-          );
+          // console.log(
+          //   `Email: ${user.email} Password: ${user.password}`
+          // );
 
-          try {
-            const response = await fetch("http://localhost:5000/login", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(user),
-            });
+          // try {
+          //   const response = await fetch("http://localhost:5000/login", {
+          //     method: "POST",
+          //     headers: {
+          //       "Content-Type": "application/json",
+          //     },
+          //     body: JSON.stringify(user),
+          //   });
       
-            if (!response.ok) {
-              const errorData = await response.json();
-              throw new Error(errorData.message || "Something went wrong!");
-            }
+          //   if (!response.ok) {
+          //     const errorData = await response.json();
+          //     throw new Error(errorData.message || "Something went wrong!");
+          //   }
       
-            const data = await response.json();
-            console.log(data);
-            navigate("/dashboard");
-          } catch (error) {
-            console.log('There was an error logging in the user!', error);
-            setMessages({ ...messages, server: error.message });
-          }
+          //   const data = await response.json();
+          //   console.log(data);
+          //   navigate("/dashboard");
+          // } catch (error) {
+          //   console.log('There was an error logging in the user!', error);
+          //   setMessages({ ...messages, server: error.message });
+          // }
+
+          
 
           try {
             const response = await axios.post("http://localhost:5000/login", user, {
               headers: {
                 "Content-Type": "application/json",
               },
+              withCredentials: true,  // Important to send cookies
             });
       
-            console.log(response.data);
-            navigate("/dashboard");
+            // console.log(response.data);
+            if (response.data.success) {
+              navigate("/dashboard");
+            } else {
+              setMessages({ ...messages, server: response.data.message });
+            }
           } catch (error) {
             if (error.response && error.response.data) {
               setMessages({ ...messages, server: error.response.data.message });
@@ -170,15 +188,15 @@ export default function Login() {
         <div className="container-fluid">
            <a className="navbar-brand" href="/">
             O<i>nline</i> J<i>udge</i>
-          </a>
-      </div>
+            </a> 
+        </div>                          
       </nav>
       <div className="form-container container-fluid d-flex align-items-center justify-content-center vh-100">
         <div className="card">
           <form>
             <h2 className="title">Login</h2>
             <div className="input-container">
-              <label>Email id:</label>
+              <label>Email:</label>
               <input
                 type="email"
                 name="email"
@@ -218,7 +236,7 @@ export default function Login() {
                   <span>to create a new account</span>
                 </div>
                 <div className="forgot-password">
-                  <a href="/forgot-password">Forgot password?</a>
+                  <Link to="/forgot-password">Forgot password?</Link>
                 </div>
               </div>
               {messages.server && <div className="error-prompt">{messages.server}</div>}
