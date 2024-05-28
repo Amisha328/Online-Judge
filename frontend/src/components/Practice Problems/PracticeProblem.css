@@ -1,0 +1,63 @@
+/* General Styles */
+       body {
+          font-family: 'Arial', sans-serif;
+          background-color: #f8f9fa;
+          margin: 0;
+          height: 100%;
+          width: 100%
+        }
+        
+        /* Filters Styling */
+        .filters {
+          margin-bottom: 20px;
+        }
+        
+        .custom-select {
+          width: 200px;
+          height: 45px;
+          font-size: 16px;
+          padding: 5px 10px;
+          border: 2px solid #ced4da;
+          border-radius: 5px;
+          background-color: #fff;
+          color: #495057;
+          transition: border-color 0.3s ease;
+        }
+        
+        .custom-select:focus {
+          border-color: #80bdff;
+          outline: 0;
+          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+        
+        /* Table Styling */
+        .table-hover tbody tr:hover {
+          background-color: #f1f1f1;
+        }
+        
+        .problem-link {
+          text-decoration: none;
+          color: #007bff;
+        }
+        
+        .problem-link:hover {
+          text-decoration: underline;
+        }
+        
+        /* Header Styling */
+        h1 {
+          font-size: 2.5rem;
+          font-weight: bold;
+          color: #343a40;
+        }
+        
+        /* Container Styling */
+        .container {
+          background-color: #fff;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+       
+        

@@ -2,6 +2,11 @@ import './App.css';
 import Login from './components/Login/Login';
 import SignUp from './components/SignUp/SignUp';
 import Dashboard from './components/Users Dashboard/Dashboard';
+import ForgotPassword from './components/Reset Password/ForgotPassword';
+import ResetPassword from './components/Reset Password/ResetPassword';
+import PracticeProblem from './components/Practice Problems/PracticeProblem';
+import CreateProblem from './components/Practice Problems/CreateProblem';
+import UpdateProblem from './components/Practice Problems/UpdateProblem';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -13,6 +18,11 @@ function App() {
           <Route path='/signup' element={<SignUp/>}></Route>
           <Route path='/login' element={<Login/>}></Route>
           <Route path='/dashboard' element={<Dashboard/>}></Route>
+          <Route path='/forgot-password' element={<ForgotPassword/>}></Route>
+          <Route path="/reset-password/:id/:token" element={<ResetPassword/>}></Route>
+          <Route path="/problems" element={<PracticeProblem/>}></Route>
+          <Route path="/problems/create" element={<CreateProblem />} />
+          <Route path="/problems/edit/:id" element={<UpdateProblem />} />
         </Routes>
     </BrowserRouter>
    </>

@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
+const crypto = require('crypto');
 
 exports.newUser = async (req, res) => {
   try {
@@ -111,6 +113,72 @@ exports.loginUser = async (req, res) => {
     });
     console.log(error.message);
   }
+};
+
+ // Forgot Password
+exports.requestPasswordReset = async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.send({status: false, message: "Email is required"});
+
+  const user = await User.findOne({ email });
+  if (!user) return res.send({status: false, message:"User with this email does not exist"});
+
+  // const resetToken = crypto.randomBytes(32).toString("hex");
+  // user.resetPasswordToken = resetToken;
+  // user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+  // await user.save();
+
+  const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
+    expiresIn: "1h",
+  });
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASSWORD,
+    },
+  });
+
+  const mailOptions = {
+    to: email,
+    from: process.env.EMAIL,
+    subject: "Password Reset",
+    text: `You are receiving this because you have requested the reset of the password for your account.\n\n
+           Please click on the following link, or paste this into your browser to complete the process:\n
+           http://localhost:5173/reset-password/${user._id}/${token}
+           If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+  };
+
+ 
+  transporter.sendMail(mailOptions, (err, response) => {
+    if (err) {
+      console.error("Error sending email:", err);
+      return res.status(500).send("Error sending email");
+    }
+    res.status(200).send("Recovery email sent");
+  });
+};
+
+//  Reset Password
+exports.resetPassword = async (req, res) => {
+  const { password } = req.body;
+  const { id, token } = req.params;
+  if (!token || !password) return res.status(400).send("Token and password are required");
+
+  jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+    if(err) {
+        return res.json({status: false, message: "Error with token"})
+    } else {
+        bcrypt.hash(password, 10)
+        .then(hash => {
+            User.findByIdAndUpdate({_id: id}, {password: hash})
+            .then(u =>res.status(200).send("Password has been reset"))
+            .catch(err => res.status(200).send(err))
+        })
+        .catch(err => res.status(200).send(err.message))
+    }
+})
 };
 
 exports.invalid = async (req, res) => {
