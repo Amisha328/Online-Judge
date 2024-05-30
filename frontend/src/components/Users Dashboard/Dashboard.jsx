@@ -34,7 +34,7 @@ export default function Dashboard() {
           toast(`Hello, ${user}!`, { position: "top-right" });
         } else {
           removeCookie("token");
-          navigate("/login");
+          navigate("/");
         }
       } catch (error) {
         console.error("Verification error:", error);

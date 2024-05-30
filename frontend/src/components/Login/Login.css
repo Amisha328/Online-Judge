@@ -1,6 +1,8 @@
       .form-container{
         height: auto;
         width: 100vw;
+        margin-top: 10px;
+        margin-bottom: 20px;
       }
             
       .title{

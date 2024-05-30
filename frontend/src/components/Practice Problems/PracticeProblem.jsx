@@ -10,6 +10,7 @@ const PracticeProblem = () => {
   const [problems, setProblems] = useState([]);
   const [difficultyFilter, setDifficultyFilter] = useState('');
   const [tagFilter, setTagFilter] = useState('');
+  const [email, setEmail] = useState('');
 
   const [currentProblem, setCurrentProblem] = useState({
     title: '',
@@ -28,6 +29,8 @@ const PracticeProblem = () => {
           },
           withCredentials: true,
         });
+         setEmail(data.email);
+
       } catch (error) {
         console.error("Verification error:", error);
         navigate("/login");
@@ -129,6 +132,7 @@ const PracticeProblem = () => {
                 <td>{problem.difficulty}</td>
                 <td>{problem.tags.split(',').map(tag => tag.trim()).join(', ')}</td>
                 <td>
+                  
                   <button className="btn btn-secondary me-2" onClick={() => handleEdit(problem._id)}>Edit</button>
                   <button className="btn btn-danger" onClick={() => handleDelete(problem._id)}>Delete</button>
                 </td>

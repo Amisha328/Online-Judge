@@ -7,7 +7,7 @@ exports.addProblem = async (req, res) => {
   try {
     const newProblem = new Problem({ title, description, difficulty, tags, sampleTestCases });
     await newProblem.save();
-    res.status(200).json({status: true, message: "Probelem added successfully!"});
+    res.status(200).json({status: true, message: "Problem added successfully!"});
   } catch (error) {
     res.status(500).json({ status: false, message: error.message });
   }
@@ -48,7 +48,7 @@ exports.updateProblem = async (req, res) => {
       return res.status(404).json({ message: 'Problem not found' });
     }
 
-    res.status(200).json({status: true, message: "Probelem updated successfully!"});
+    res.status(200).json({status: true, message: "Problem updated successfully!"});
   } catch (error) {
     res.status(500).json({ status: false, message: error.message });
   }

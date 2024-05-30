@@ -1,0 +1,94 @@
+
+        /* .card{
+          box-shadow: 0px 4px 16px 0px grey;
+        }
+        .card .card-text{
+          display: flex;
+          align-items: center; 
+          justify-content: center;
+          font-family: Georgia, 'Times New Roman', Times, serif;
+          color: #010666d6; 
+          padding: 20px;
+          margin: 15px;
+        } */
+/* 
+        .welcome-title{
+          white-space: nowrap;
+          font-family: Georgia, 'Times New Roman', Times, serif;
+        } */
+
+        
+          .banner-title {
+          margin: 80px 120px;
+          color: black
+        }
+        
+        .banner-title h1 {
+          font-size: 64px;
+          margin-bottom: 30px;
+        }
+        
+        .banner-title h1 span {
+          color: rgb(194, 15, 15);
+        }
+        .welcome-text{
+          /* display: flex;
+          align-items: center; 
+          justify-content: center; */
+          font-family: Georgia, 'Times New Roman', Times, serif;
+          color: rgb(3, 65, 111);
+          /* padding: 20px; */
+          font-size: 30px;
+          margin: 15px;
+        }
+
+
+        .wordCarousel div {
+          overflow: hidden;
+          position: absolute;
+          display: inline-block;
+          height: 95px;
+        }
+        
+        .wordCarousel div li {
+          text-transform: capitalize;
+          font-size: 64px;
+          font-weight: bold;
+          padding: 0px 10px;
+          height: 70px;
+          margin-bottom: 70px;
+          display: block;
+          color: rgb(194, 15, 15);
+        }
+        .flip4 {
+          animation: flip4 5s infinite;
+        }
+        @keyframes flip4 {
+          0% {
+            margin-top: -560px;
+          }
+          5% {
+            margin-top: -420px;
+          }
+          25% {
+            margin-top: -420px;
+          }
+          30% {
+            margin-top: -280px;
+          }
+          50% {
+            margin-top: -280px;
+          }
+          55% {
+            margin-top: -140px;
+          }
+          75% {
+            margin-top: -140px;
+          }
+          99.99% {
+            margin-top: 0px;
+          }
+          100% {
+            margin-top: -420px;
+          }
+        }

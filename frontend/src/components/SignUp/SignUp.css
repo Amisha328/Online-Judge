@@ -1,6 +1,8 @@
     .form-container{
       height: auto;
       width: 100vw;
+      margin-top: 20px;
+      margin-bottom: 20px;
     }
     .card{
       height: auto;
