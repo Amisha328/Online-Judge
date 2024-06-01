@@ -13,8 +13,11 @@ module.exports.userVerification = (req, res) => {
       return res.status(400).json({ success: false });
     } else {
       const user = await User.findById(data.id);
-      if (user) return res.json({ status: true, user: user.name, email: user.email });
-      else return res.json({ status: false });
+      if(user) {
+        const isAdmin = user.email === process.env.ADMIN_EMAIL;
+        return res.json({ status: true, user: user.name, email: user.email, isAdmin });
+      }
+      else return res.json({ status: false, message: "Invalid User" });
     }
   });
 };

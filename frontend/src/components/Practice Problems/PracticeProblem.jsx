@@ -10,7 +10,7 @@ const PracticeProblem = () => {
   const [problems, setProblems] = useState([]);
   const [difficultyFilter, setDifficultyFilter] = useState('');
   const [tagFilter, setTagFilter] = useState('');
-  const [email, setEmail] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [currentProblem, setCurrentProblem] = useState({
     title: '',
@@ -29,7 +29,8 @@ const PracticeProblem = () => {
           },
           withCredentials: true,
         });
-         setEmail(data.email);
+        console.log(data);
+        setIsAdmin(data.isAdmin);
 
       } catch (error) {
         console.error("Verification error:", error);
@@ -81,7 +82,9 @@ const PracticeProblem = () => {
    <div className="container mt-5">
         <div className="d-flex justify-content-between mb-4">
           <h1>Practice Problems</h1>
+          {isAdmin && (
           <button className="btn btn-primary btn-sm" onClick={handleAdd}>+ Create New Problem</button>
+          )}
         </div>
         <div className="filters mb-4 d-flex align-items-center">
           <select
@@ -118,7 +121,9 @@ const PracticeProblem = () => {
               <th>Name</th>
               <th>Difficulty</th>
               <th>Tags</th>
+              {isAdmin && (  
               <th>Actions</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -131,11 +136,12 @@ const PracticeProblem = () => {
                 </td>
                 <td>{problem.difficulty}</td>
                 <td>{problem.tags.split(',').map(tag => tag.trim()).join(', ')}</td>
+                {isAdmin && (  
                 <td>
-                  
                   <button className="btn btn-secondary me-2" onClick={() => handleEdit(problem._id)}>Edit</button>
                   <button className="btn btn-danger" onClick={() => handleDelete(problem._id)}>Delete</button>
                 </td>
+                )}
               </tr>
             ))}
           </tbody>

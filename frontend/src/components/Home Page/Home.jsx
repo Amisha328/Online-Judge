@@ -40,7 +40,7 @@ export default function Home() {
           <div class="banner-title">
                     <h1 class="wordCarousel">Welcome to<span> Online Judge</span><br/> 
                     <p className="welcome-text">
-                    Online Judge is Link platform for hosting coding challenges and competitions. 
+                    Online Judge is a platform for hosting coding challenges and competitions. 
                     Participate in coding contests, practice problems, and track your progress.
                     </p><br/>
                     Let's 

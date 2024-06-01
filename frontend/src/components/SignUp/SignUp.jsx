@@ -97,7 +97,7 @@ function SignUp() {
     if(!passwordRegex.test(password)){
       setMessages({
         ...messages,
-        password: "Password must contain atleast one uppercase,one lowercase, one digit, and one special character",
+        password: "Password must contain atleast 8 char with one uppercase,one lowercase, one digit, and one special character",
       });
     }
     else {

@@ -23,6 +23,8 @@ const CreateProblem = () => {
                       
                         setCurrentProblem({ title: '', description: '', difficulty: '', tags: '', sampleTestCases: [{ input: '', expectedOutput: '', explanation: '' }] });
                     } catch (error) {
+                        console.log(error.response);
+                        toast("Unauthorized request", { position: "top-right" })
                         console.error('Error creating problem:', error);
                     }
           };
