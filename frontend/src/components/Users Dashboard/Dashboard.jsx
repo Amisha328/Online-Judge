@@ -39,7 +39,7 @@ export default function Dashboard() {
       } catch (error) {
         console.error("Verification error:", error);
         // removeCookie("token");
-        navigate("/login");
+        navigate("/");
       }
     };
     verifyCookie();

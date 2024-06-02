@@ -16,6 +16,8 @@ const ProblemDetail = () => {
   const [language, setLanguage] = useState('cpp');
   const [output, setOutput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [input, setInput] = useState('');
+  const [activeTab, setActiveTab] = useState('input');
 
   useEffect(() => {
     const fetchProblem = async () => {
@@ -31,25 +33,25 @@ const ProblemDetail = () => {
   }, [id]);
 
   const boilerplateCode = {
-          cpp: `#include <iostream>
+    cpp: `#include <iostream>
 
     int main() { 
       std::cout << "Hello from C++!"; 
       return 0; 
     }`,
-          java: `class HelloWorld {
+    java: `class HelloWorld {
             public static void main(String[] args) {
                 System.out.println("Hello from Java!!");
             }
           }`,
-          py: `print("Hello from Python!!")`,
-          c: `#include <stdio.h>
+    py: `print("Hello from Python!!")`,
+    c: `#include <stdio.h>
       
           int main() {
             printf("Hello from C language!!");
             return 0;
           }`
-        };
+  };
       
         useEffect(() => {
           setCode(boilerplateCode[language]);
@@ -62,10 +64,12 @@ const ProblemDetail = () => {
         const handleSubmit = async () => {
           const payload = {
             language,
-            code
+            code,
+            input
           };
           setLoading(true);
           setOutput("");
+          setActiveTab('output');
           try {
             const { data } = await axios.post('http://localhost:5000/run', payload);
             console.log(data);
@@ -133,11 +137,11 @@ const ProblemDetail = () => {
                   padding={10}
                   style={{
                     fontFamily: '"Fira code", "Fira Mono", monospace',
-                    fontSize: 12,
-                    outline: 'none',
-                    border: 'none',
-                    height: '100%',
-                    overflowY: 'auto'
+                      fontSize: 12,
+                      outline: 'none',
+                      border: 'none',
+                      minHeight: '100%',
+                      overflow: 'auto'
                   }}
                 />
               </div>
@@ -145,16 +149,38 @@ const ProblemDetail = () => {
                 <button onClick={handleSubmit} className="btn btn-primary me-2">Run</button>
                 <button className="btn btn-success">Submit</button>
               </div>
-              
-              {/* {output && ( */}
-                <div className="outputbox mt-4 bg-dark text-white p-3 rounded" style={{"height":"150px"}}>
-                {loading && <div className="loader mt-4"></div>}
-                  <p style={{
-                    fontFamily: '"Fira code", "Fira Mono", monospace',
-                    fontSize: 12,
-                    }}>{output}</p>
-                </div>
-              {/* )} */}
+             
+              <div className="tab-container">
+            <div
+              className={`tab ${activeTab === 'input' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('input')}
+            >
+              Input
+            </div>
+            <div
+              className={`tab ${activeTab === 'output' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('output')}
+            >
+              Output
+            </div>
+          </div>
+          {activeTab === 'input' && (
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              className="outputbox mt-4 bg-dark text-white p-3 rounded"
+              style={{ height: '150px'}}
+            ></textarea>
+          )}
+          {activeTab === 'output' && (
+            <div className="outputbox mt-4 bg-dark text-white p-3 rounded" style={{ height: '150px' }}>
+              {loading && <div className="loader mt-4"></div>}
+              <p style={{
+                fontFamily: '"Fira code", "Fira Mono", monospace',
+                fontSize: 12,
+              }}>{output}</p>
+            </div>
+          )}
             </div>
           </div>
         </div>

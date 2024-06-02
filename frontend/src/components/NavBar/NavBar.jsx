@@ -1,24 +1,26 @@
 import React from 'react'
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import axios from "axios";
 
 export default function NavBar() {
   let navigate = useNavigate();
+
   const Logout = async () => {
-    try {
-      await axios.post("http://localhost:5000/logout", {}, { withCredentials: true });
-      navigate("/login");
-    } catch (error) {
-      console.error("Failed to logout:", error);
-    }
+        try {
+          await axios.post("http://localhost:5000/logout", {}, { withCredentials: true });
+          navigate("/login");
+        } catch (error) {
+          console.error("Failed to logout:", error);
+        }
   };
           return (
                     <nav
                       className="navbar navbar-expand-lg navbar-dark bg-dark"
                     >
                       <div className="container-fluid">
-                        <Link className="navbar-brand" to="/">
+                        <Link className="navbar-brand" to="/dashboard">
                         O<i>nline</i> J<i>udge</i>
                         </Link>
                         <button
