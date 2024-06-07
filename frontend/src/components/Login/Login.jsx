@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 export default function Login() {
   axios.defaults.withCredentials = true;
   let navigate = useNavigate();
+  // const [userId, setUserId] = useState("");
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -166,7 +167,8 @@ export default function Login() {
               withCredentials: true,  // Important to send cookies
             });
       
-            // console.log(response.data);
+            console.log(response.data);
+            // console.log(response.data.user._id);
             if (response.data.success) {
               navigate("/dashboard");
             } else {

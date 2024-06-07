@@ -103,6 +103,7 @@ exports.loginUser = async (req, res) => {
       message: "You have successfully logged in!",
       success: true,
       token,
+      user
     });
 
 

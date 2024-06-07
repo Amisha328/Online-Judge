@@ -18,6 +18,30 @@ const ProblemDetail = () => {
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState('');
   const [activeTab, setActiveTab] = useState('input');
+  const [problemTab, setProblemTab] = useState('problem');
+  const [verdict, setVerdict] = useState('');
+  const [userId, setUserID] = useState("");
+  const [submissions, setSubmissions] = useState([]);
+
+  useEffect(() => {
+    const verifyCookie = async () => {
+      try {
+        const { data } = await axios.post("http://localhost:5000/verify-token", {}, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
+        console.log(data);
+        setUserID(data.id);
+
+      } catch (error) {
+        console.error("Verification error:", error);
+        navigate("/login");
+      }
+    };
+    verifyCookie();
+  }, []);
 
   useEffect(() => {
     const fetchProblem = async () => {
@@ -29,8 +53,20 @@ const ProblemDetail = () => {
       }
     };
 
+    const fetchSubmissions = async () => {
+      try {
+        // console.log("ID: ",id);
+        const response = await axios.get(`http://localhost:5000/problems/submissions/${id}/${userId}`)
+        setSubmissions(response.data);
+        console.log(response)
+      } catch (error) {
+        console.error('Error fetching submissions:', error);
+      }
+    };
+
     fetchProblem();
-  }, [id]);
+    fetchSubmissions();
+  }, [id, userId]);
 
   const boilerplateCode = {
     cpp: `#include <iostream>
@@ -61,7 +97,7 @@ const ProblemDetail = () => {
           setLanguage(event.target.value);
         };
       
-        const handleSubmit = async () => {
+        const handleRun = async () => {
           const payload = {
             language,
             code,
@@ -80,40 +116,112 @@ const ProblemDetail = () => {
           }
         }
 
+        const handleSubmit = async () => {
+          const payload = {
+            userId,
+            language,
+            code,
+            problemId: id,
+            timeLimt: problem.timeLimit
+          };
+          setLoading(true);
+          setOutput("");
+          setVerdict("");
+          setActiveTab('verdict');
+          try {
+            const { data } = await axios.post('http://localhost:5000/submit', payload);
+            console.log(data);
+            setVerdict(data.verdict);
+            setLoading(false);
+          } catch (error) {
+            console.log(error.response);
+          }
+        }
+
   return (
-          <div className="container-fluid mt-5">
-          <div className="row">
-            <div className="col-md-6 problem-description">
+    <div className="container-fluid mt-5">
+      <div className="row">
+        <div className="col-md-6">
+        <h2><b>{problem && problem.title}</b></h2>
+          <div className="tab-container">
+            <div
+              className={`tab ${problemTab === 'problem' ? 'tab-active' : ''}`}
+              onClick={() => setProblemTab('problem')}
+            >
+              Problem
+            </div>
+            <div
+              className={`tab ${problemTab === 'submissions' ? 'tab-active' : ''}`}
+              onClick={() => setProblemTab('submissions')}
+            >
+              Submissions
+            </div>
+          </div>
+          {problemTab === 'problem' && (
+            <div className="problem-description">
               {problem ? (
                 <>
-                  <h2><b>{problem.title}</b></h2>
-                  <span className="problem-text">{problem.description}</span> <br/><br/>
+                  <br/>
+                  <h4>Description:</h4>
+                  <span className="problem-text">{problem.description}</span> <br /><br />
                   <h4>Sample Test Cases:</h4>
-                {problem.sampleTestCases && problem.sampleTestCases.length > 0 ? (
+                  {problem.sampleTestCases && problem.sampleTestCases.length > 0 ? (
+                    <table className="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Input</th>
+                          <th>Output</th>
+                          <th>Explanation</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {problem.sampleTestCases.map((testCase, index) => (
+                          <tr key={index}>
+                            <td className="problem-text">{testCase.input}</td>
+                            <td className="problem-text">{testCase.expectedOutput}</td>
+                            <td className="problem-text">{testCase.explanation}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <p>No sample test cases available.</p>
+                  )}
+                  <h5><b>Constraints:</b></h5>
+                  <span className="problem-text">{problem.timeLimit / 1000} sec</span>
+                </>
+              ) : (
+                <p>Loading...</p>
+              )}
+            </div>
+          )}
+          {problemTab === 'submissions' && (
+            <div className="submissions-list">
+              <br/>
+              <h3>Your Submissions</h3>
+              {submissions.length > 0 ? (
                 <table className="table table-bordered">
                   <thead>
                     <tr>
-                      <th>Input</th>
-                      <th>Output</th>
-                      <th>Explanation</th>
+                      <th>Language</th>
+                      <th>Verdict</th>
+                      <th>Time</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {problem.sampleTestCases.map((testCase, index) => (
+                    {submissions.map((submission, index) => (
                       <tr key={index}>
-                        <td className="problem-text">{testCase.input}</td>
-                        <td className="problem-text">{testCase.expectedOutput}</td>
-                        <td className="problem-text">{testCase.explanation}</td>
+                        <td>{submission.language}</td>
+                        <td>{submission.verdict}</td>
+                        <td>{new Date(submission.submissionTime).toLocaleString()}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               ) : (
-                <p>No sample test cases available.</p>
+                <p>No submissions found.</p>
               )}
-            </>
-          ) : (
-            <p>Loading...</p>
+            </div>
           )}
         </div>
             <div className="col-md-6 editor-container">
@@ -146,8 +254,8 @@ const ProblemDetail = () => {
                 />
               </div>
               <div className="button-container mt-3">
-                <button onClick={handleSubmit} className="btn btn-primary me-2">Run</button>
-                <button className="btn btn-success">Submit</button>
+                <button onClick={handleRun} className="btn btn-primary me-2">Run</button>
+                <button onClick={handleSubmit} className="btn btn-success">Submit</button>
               </div>
              
               <div className="tab-container">
@@ -163,6 +271,12 @@ const ProblemDetail = () => {
             >
               Output
             </div>
+            <div
+              className={`tab ${activeTab === 'verdict' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('verdict')}
+            >
+              Verdict
+            </div>
           </div>
           {activeTab === 'input' && (
             <textarea
@@ -177,8 +291,18 @@ const ProblemDetail = () => {
               {loading && <div className="loader mt-4"></div>}
               <p style={{
                 fontFamily: '"Fira code", "Fira Mono", monospace',
-                fontSize: 12,
+                fontSize: 13
               }}>{output}</p>
+            </div>
+          )}
+          {activeTab === 'verdict' && (
+            <div className="outputbox mt-4 bg-dark text-white p-3 rounded" style={{ height: '150px' }}>
+              {loading && <div className="loader mt-4"></div>}
+              <p style={{
+                fontFamily: '"Fira code", "Fira Mono", monospace',
+                fontSize: 13
+              }}>{verdict}
+              </p>
             </div>
           )}
             </div>

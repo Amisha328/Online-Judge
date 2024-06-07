@@ -12,6 +12,7 @@ const generateFile = (language, code) => {
           const filename = `${jobId}.${language}`; // cc104f51-df9e-4edc-8532-adb3aa008ac3.java
           const filePath = path.join(dirCodes, filename); // D:\AlgoUniversity\AlgoUniversity-Dev\Application Online Compiler\backend\codes\cc104f51-df9e-4edc-8532-adb3aa008ac3.java
           fs.writeFileSync(filePath, code);
+          // console.log(filePath);
           return filePath;
 };
 

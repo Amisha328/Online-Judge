@@ -14,10 +14,12 @@ routing.post('/request-password-reset', controller.requestPasswordReset);
 routing.post('/reset-password/:id/:token', controller.resetPassword);
 routing.get('/problems', problemController.getAllProblems);
 routing.get('/problems/:id', problemController.getProblem);
-routing.post('/problems/add', isAdmin, problemController.addProblem);
-routing.put('/problems/:id', isAdmin, problemController.updateProblem);
-routing.delete('/problems/:id',isAdmin, problemController.deleteProblem);
+routing.get('/problems/submissions/:id/:userId', problemController.getSubmissions);
+routing.post('/problems/add', problemController.addProblem);
+routing.put('/problems/:id', problemController.updateProblem);
+routing.delete('/problems/:id', problemController.deleteProblem);
 routing.post('/run', compilerController.executeCode);
+routing.post('/submit', compilerController.submitCode);
 routing.all('*', controller.invalid);
 
 module.exports = routing;

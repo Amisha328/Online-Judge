@@ -12,6 +12,7 @@ const generateInputFile = async (input) => {
           const inputFileName = `${jobId}.txt`;
           const inputFilePath = path.join(dirInputs, inputFileName);
           await fs.writeFileSync(inputFilePath, input);
+          // console.log(inputFilePath);
           return inputFilePath;
 };
 

@@ -15,7 +15,7 @@ module.exports.userVerification = (req, res) => {
       const user = await User.findById(data.id);
       if(user) {
         const isAdmin = user.email === process.env.ADMIN_EMAIL;
-        return res.json({ status: true, user: user.name, email: user.email, isAdmin });
+        return res.json({ status: true, id: user._id, user: user.name, email: user.email, isAdmin });
       }
       else return res.json({ status: false, message: "Invalid User" });
     }

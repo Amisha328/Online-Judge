@@ -28,7 +28,7 @@ export default function Dashboard() {
           },
           withCredentials: true,
         });
-        const { status, user } = data;
+        const { status, user, id } = data;
         if (status) {
           setName(user);
           toast(`Hello, ${user}!`, { position: "top-right" });

@@ -38,6 +38,8 @@ DBConnection();
 
 app.use('/', route);
 
+require('./controller/cleanupScheduler.js');
+
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
