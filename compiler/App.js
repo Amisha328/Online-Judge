@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 
 /*
 enable the express server to respond to preflight requests. 
@@ -27,10 +27,9 @@ app.use(
 );
 
 
-// middlewares
-// app.use(cors())
+
 app.use(express.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
@@ -38,6 +37,7 @@ DBConnection();
 
 app.use('/', route);
 
+require('./controller/cleanupScheduler.js');
 
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);

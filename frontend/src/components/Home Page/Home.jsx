@@ -37,15 +37,15 @@ export default function Home() {
           </div>
           </nav>
 
-          <div class="banner-title">
-                    <h1 class="wordCarousel">Welcome to<span> Online Judge</span><br/> 
+          <div className="banner-title">
+                    <h1 className="wordCarousel">Welcome to<span> Online Judge</span><br/> 
                     <p className="welcome-text">
                     Online Judge is a platform for hosting coding challenges and competitions. 
                     Participate in coding contests, practice problems, and track your progress.
                     </p><br/>
                     Let's 
                                         <div>
-                                                  <ul class="flip4">
+                                                  <ul className="flip4">
                                                             <li>code!</li>
                                                             <li>compete!</li>
                                                             <li>practice!</li>

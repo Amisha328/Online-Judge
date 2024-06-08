@@ -3,8 +3,8 @@ const routing = express.Router();
 const controller = require('../controller/autheticate');
 const { userVerification, logout } = require('../Middlewares/AuthMiddleware');
 const problemController = require('../controller/problemController');
-const compilerController = require('../controller/compilerController');
 const { isAdmin } = require("../Middlewares/AdminMiddleware.js");
+const contestController = require("../controller/competitionController.js");
 
 routing.post('/signup', controller.newUser);
 routing.post('/login', controller.loginUser);
@@ -18,8 +18,11 @@ routing.get('/problems/submissions/:id/:userId', problemController.getSubmission
 routing.post('/problems/add', problemController.addProblem);
 routing.put('/problems/:id', problemController.updateProblem);
 routing.delete('/problems/:id', problemController.deleteProblem);
-routing.post('/run', compilerController.executeCode);
-routing.post('/submit', compilerController.submitCode);
+routing.get('/contests/:contestId', contestController.getProblems)
+routing.get('/current', contestController.currentContest);
+routing.get('/upcoming', contestController.upcomingContest);
+routing.get('/past', contestController.pastContest);
+routing.post('/create-contest', contestController.createContest);
 routing.all('*', controller.invalid);
 
 module.exports = routing;

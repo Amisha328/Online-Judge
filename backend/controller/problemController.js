@@ -85,7 +85,7 @@ exports.getSubmissions = async (req, res) => {
     }
 
     const userSubmissions = problem.submissions.filter(submission => submission.userId.toString() === userId);
-    console.log(userSubmissions);
+    // console.log(userSubmissions);
     res.json(userSubmissions);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching submissions', error });

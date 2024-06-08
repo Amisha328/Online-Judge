@@ -12,7 +12,7 @@ const executeFile = (language, filePath, inputPath, timeLimt) => {
   const jobId = path.basename(filePath).split(".")[0];
   const outputFilename = `${jobId}.${getOutputExtension(language)}`;
   const outPath = path.join(outputPath, outputFilename);
-  console.log(path.basename(outPath));
+  // console.log(path.basename(outPath));
 
   return new Promise((resolve, reject) => {
     exec(getCompileCommand(language, filePath, outPath, inputPath), (error, stdout, stderr) => {

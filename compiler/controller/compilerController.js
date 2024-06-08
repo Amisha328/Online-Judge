@@ -6,14 +6,16 @@ const fs = require("fs");
 const path = require("path");
 
 exports.executeCode = async (req, res) => {
-  const { language = 'cpp', code, input } = req.body;
+  const { language = 'cpp', code, input, timeLimit } = req.body;
 
   if (code == undefined) return res.status(404).json({ success: false, error: "Empty code body" });
 
   try {
     const filePath = await generateFile(language, code);
     const inputPath = await generateInputFile(input);
-    const output = await executeFile(language, filePath, inputPath);
+    const output = await executeFile(language, filePath, inputPath, timeLimit);
+    console.log("OUTPUT");
+    console.log(output);
     res.json({ filePath, inputPath, output });
   } catch (error) {
     res.status(500).json({ success: false, error: error });
@@ -21,7 +23,7 @@ exports.executeCode = async (req, res) => {
 };
 
 exports.submitCode = async (req, res) => {
-  const { userId, language = 'cpp', code, problemId, timeLimt } = req.body;
+  const { userId, language = 'cpp', code, problemId, timeLimit } = req.body;
   if (!code) return res.status(404).json({ success: false, error: "Empty code body" });
   try {
     // Fetch hidden test cases from the database
@@ -30,7 +32,6 @@ exports.submitCode = async (req, res) => {
 
     const hiddenTestCases = problem.hiddenTestCases;
 
-  
     const { input, expectedOutput } = hiddenTestCases[0];
     const filePath = await generateFile(language, code);
     const inputPath = await generateInputFile(input);
@@ -38,7 +39,7 @@ exports.submitCode = async (req, res) => {
     const outputPath = path.join(__dirname, "outputs", `${jobId}.${getOutputExtension(language)}`);
 
     try{
-      const output = await executeFile(language, filePath, inputPath, timeLimt);
+      const output = await executeFile(language, filePath, inputPath, timeLimit);
       // console.log("output", output);
       if (output.trim() !== expectedOutput.trim()) {
        saveSubmission(problem, userId, "Wrong Answer on Test Case 1", language, code);
@@ -65,7 +66,7 @@ exports.submitCode = async (req, res) => {
       console.log(input);
 
       try {
-        const output = await executeCompiledFile(language, filePath, outputPath, inputPath, timeLimt);
+        const output = await executeCompiledFile(language, filePath, outputPath, inputPath, timeLimit);
         // console.log("Inside Output")
         // console.log(output);
         if (output.trim() !== expectedOutput.trim()) {

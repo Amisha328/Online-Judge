@@ -1,26 +1,7 @@
-
-        /* .card{
-          box-shadow: 0px 4px 16px 0px grey;
-        }
-        .card .card-text{
-          display: flex;
-          align-items: center; 
-          justify-content: center;
-          font-family: Georgia, 'Times New Roman', Times, serif;
-          color: #010666d6; 
-          padding: 20px;
-          margin: 15px;
-        } */
-/* 
-        .welcome-title{
-          white-space: nowrap;
-          font-family: Georgia, 'Times New Roman', Times, serif;
-        } */
-
         
-          .banner-title {
-          margin: 80px 120px;
-          color: black
+        .banner-title {
+          margin: 80px 80px;
+          color: black;
         }
         
         .banner-title h1 {
@@ -42,19 +23,18 @@
           margin: 15px;
         }
 
-
+        
         .wordCarousel div {
           overflow: hidden;
-          position: absolute;
           display: inline-block;
-          height: 95px;
+          height: 65px;
         }
         
         .wordCarousel div li {
           text-transform: capitalize;
           font-size: 64px;
           font-weight: bold;
-          padding: 0px 10px;
+          padding: 0px 2px;
           height: 70px;
           margin-bottom: 70px;
           display: block;
