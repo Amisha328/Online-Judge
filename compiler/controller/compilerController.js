@@ -14,8 +14,8 @@ exports.executeCode = async (req, res) => {
     const filePath = await generateFile(language, code);
     const inputPath = await generateInputFile(input);
     const output = await executeFile(language, filePath, inputPath, timeLimit);
-    console.log("OUTPUT");
-    console.log(output);
+    // console.log("OUTPUT");
+    // console.log(output);
     res.json({ filePath, inputPath, output });
   } catch (error) {
     res.status(500).json({ success: false, error: error });
@@ -126,8 +126,9 @@ const saveSubmission = async (problem, userId, verdict, language, code) => {
 const getOutputExtension = (language) => {
   switch (language) {
     case "cpp":
+      return "out";
     case "c":
-      return "exe";
+      return "out";
     case "java":
       return "class";
     case "py":
