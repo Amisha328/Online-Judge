@@ -21,7 +21,7 @@ An Online Judge system that allows users to solve coding problems, submit soluti
         </tr>
 </table>
 
-### 2. Landing Page and Registration/ Login:
+### 2. Registration and Login Page:
 
 <table>
         <tr> 
@@ -83,7 +83,7 @@ An Online Judge system that allows users to solve coding problems, submit soluti
 <table>
         <tr> 
         <td><img src = "screenshots/competition_page.png"  width="900"></td>
-        <td><img src = "screenshots/competition_problem_page.png"  width="900"></td>
+        <td><img src = "screenshots/competition_problem_page.png"  width="1000"></td>
         </tr>
 </table>
 
