@@ -1,0 +1,35 @@
+       .contest-card {
+          background: #cdd9ec;
+          border-radius: 10px;
+          box-shadow: 0 2px 4px rgba(58, 57, 57, 0.1);
+          padding: 20px;
+          margin-bottom: 20px;
+        }
+        
+        .contest-card h3 {
+          margin: 0 0 10px 0;
+          color: #0059b7;
+        }
+        
+        .contest-card p {
+          margin: 0 0 20px 0;
+          color: #424040;
+        }
+        
+        .contest-card button {
+          background: #079537;
+          color: #fff;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+        
+        .contest-card button:hover {
+          background: #545b63;
+        }
+        
+        .contest-card button:disabled {
+          background: #a9a5a5;
+          cursor: not-allowed;
+        }

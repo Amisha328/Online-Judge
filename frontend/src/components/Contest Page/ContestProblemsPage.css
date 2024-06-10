@@ -1,0 +1,46 @@
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.problem-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.problem-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.problem-card h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.btn-container {
+  margin-top: auto; /* Pushes the button to the bottom */
+  display: flex;
+  justify-content: center; /* Centers the button horizontally */
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 10px 20px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
