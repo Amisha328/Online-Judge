@@ -8,6 +8,7 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
 import './ProbelmDetails.css'
+import { CODE_RUN, CODE_SUBMIT, base_url } from '../../../api_configue';
 
 const ProblemDetail = () => {
   const { id } = useParams();
@@ -101,13 +102,14 @@ const ProblemDetail = () => {
           const payload = {
             language,
             code,
-            input
+            input,
+            timeLimit: problem.timeLimit
           };
           setLoading(true);
           setOutput("");
           setActiveTab('output');
           try {
-            const { data } = await axios.post('http://localhost:5000/run', payload);
+            const { data } = await axios.post(`${base_url}${CODE_RUN}`, payload);
             console.log(data);
             setOutput(data.output);
             setLoading(false);
@@ -122,14 +124,14 @@ const ProblemDetail = () => {
             language,
             code,
             problemId: id,
-            timeLimt: problem.timeLimit
+            timeLimit: problem.timeLimit
           };
           setLoading(true);
           setOutput("");
           setVerdict("");
           setActiveTab('verdict');
           try {
-            const { data } = await axios.post('http://localhost:5000/submit', payload);
+            const { data } = await axios.post(`${base_url}${CODE_SUBMIT}`, payload);
             console.log(data);
             setVerdict(data.verdict);
             setLoading(false);

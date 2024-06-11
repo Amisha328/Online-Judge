@@ -9,8 +9,10 @@ import CreateProblem from './components/Practice Problems/CreateProblem';
 import UpdateProblem from './components/Practice Problems/UpdateProblem';
 import Home from './components/Home Page/Home';
 import ProblemDetail from './components/Problems Page/ProbelmDetails';
-
+import CompetitionPage from './components/Contest Page/CompetitionPage';
+import ContestProblemsPage from './components/Contest Page/ContestProblemsPage';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import HostContest from './components/Contest Page/HostContest';
 
 function App() {
   return (
@@ -27,6 +29,10 @@ function App() {
           <Route path="/problems/create" element={<CreateProblem />} />
           <Route path="/problems/edit/:id" element={<UpdateProblem />} />
           <Route path="/problems/:id" element={<ProblemDetail />} />
+          <Route path="/compete" element={<CompetitionPage/>}/>
+          <Route path="/competitions/:contestId/problems" element={<ContestProblemsPage/>} />
+          <Route path="/competitions/:contestId/problems/:id" element={<ProblemDetail/>} />
+          <Route path="/host-contest" element={<HostContest/>}/>
         </Routes>
     </BrowserRouter>
    </>

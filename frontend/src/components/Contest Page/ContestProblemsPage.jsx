@@ -86,7 +86,7 @@ const ContestProblemsPage = () => {
             <div key={problem._id} className="problem-card">
               <h3>{problem.title}</h3>
               <div className="btn-container">
-                <Link to={`problems/${problem._id}`} className="btn btn-primary">Solve Problem</Link>
+                <Link to={`${problem._id}`} className="btn btn-primary">Solve Problem</Link>
               </div>
             </div>
           ))
