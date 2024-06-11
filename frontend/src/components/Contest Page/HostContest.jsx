@@ -10,11 +10,11 @@ const HostContest = () => {
     const [endDateTime, setEndDateTime] = useState('');
     const [problems, setProblems] = useState([]);
     const [selectedProblems, setSelectedProblems] = useState([]);
-
+    const root = import.meta.env.VITE_BACKEND_URL;
     useEffect(() => {
         const fetchProblems = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/problems');
+                const response = await axios.get(`${root}/problems`);
                 setProblems(response.data);
             } catch (error) {
                 console.error('Error fetching problems:', error);
@@ -34,7 +34,7 @@ const HostContest = () => {
         };
 
         try {
-            const response = await axios.post('http://localhost:5000/create-contest', payload);
+            const response = await axios.post(`${root}/create-contest`, payload);
             console.log('Competition created:', response.data);
             toast(`${response.data.message}!`, { position: "top-right" });
         } catch (error) {

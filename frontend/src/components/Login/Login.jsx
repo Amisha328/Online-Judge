@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 export default function Login() {
   axios.defaults.withCredentials = true;
   let navigate = useNavigate();
+  const root = import.meta.env.VITE_BACKEND_URL;
   // const [userId, setUserId] = useState("");
   const [user, setUser] = useState({
     email: "",
@@ -160,7 +161,7 @@ export default function Login() {
           
 
           try {
-            const response = await axios.post("http://localhost:5000/login", user, {
+            const response = await axios.post(`${root}/login`, user, {
               headers: {
                 "Content-Type": "application/json",
               },

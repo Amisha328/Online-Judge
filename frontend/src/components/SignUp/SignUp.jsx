@@ -9,6 +9,7 @@ import axios from 'axios';
 
 function SignUp() {
   let navigate = useNavigate();
+  const root = import.meta.env.VITE_BACKEND_URL;
   const [user, setUser] = useState({
     name: "",
     phoneNo: "",
@@ -194,7 +195,7 @@ function SignUp() {
       // }
 
       try {
-        const response = await axios.post("http://localhost:5000/signup", user);
+        const response = await axios.post(`${root}/signup`, user);
         console.log(response);
         navigate('/login');
       } catch (error) {

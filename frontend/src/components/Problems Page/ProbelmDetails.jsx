@@ -8,7 +8,6 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
 import './ProbelmDetails.css'
-import { CODE_RUN, CODE_SUBMIT, base_url } from '../../../api_configue';
 
 const ProblemDetail = () => {
   const { id } = useParams();
@@ -23,11 +22,11 @@ const ProblemDetail = () => {
   const [verdict, setVerdict] = useState('');
   const [userId, setUserID] = useState("");
   const [submissions, setSubmissions] = useState([]);
-
+  const root = import.meta.env.VITE_BACKEND_URL;
   useEffect(() => {
     const verifyCookie = async () => {
       try {
-        const { data } = await axios.post("http://localhost:5000/verify-token", {}, {
+        const { data } = await axios.post(`${root}/verify-token`, {}, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -47,7 +46,7 @@ const ProblemDetail = () => {
   useEffect(() => {
     const fetchProblem = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/problems/${id}`);
+        const response = await axios.get(`${root}/problems/${id}`);
         setProblem(response.data);
       } catch (error) {
         console.error('Error fetching the problem:', error);
@@ -57,7 +56,7 @@ const ProblemDetail = () => {
     const fetchSubmissions = async () => {
       try {
         // console.log("ID: ",id);
-        const response = await axios.get(`http://localhost:5000/problems/submissions/${id}/${userId}`)
+        const response = await axios.get(`${root}/problems/submissions/${id}/${userId}`)
         setSubmissions(response.data);
         console.log(response)
       } catch (error) {
@@ -109,7 +108,7 @@ const ProblemDetail = () => {
           setOutput("");
           setActiveTab('output');
           try {
-            const { data } = await axios.post(`${base_url}${CODE_RUN}`, payload);
+            const { data } = await axios.post(import.meta.env.VITE_CODE_RUN, payload);
             console.log(data);
             setOutput(data.output);
             setLoading(false);
@@ -131,7 +130,7 @@ const ProblemDetail = () => {
           setVerdict("");
           setActiveTab('verdict');
           try {
-            const { data } = await axios.post(`${base_url}${CODE_SUBMIT}`, payload);
+            const { data } = await axios.post(import.meta.env.VITE_CODE_SUBMIT, payload);
             console.log(data);
             setVerdict(data.verdict);
             setLoading(false);

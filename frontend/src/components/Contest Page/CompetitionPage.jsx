@@ -10,11 +10,12 @@ const CompetitionPage = () => {
   const [upcomingContests, setUpcomingContests] = useState([]);
   const [pastContests, setPastContests] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const root = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const verifyCookie = async () => {
       try {
-        const { data } = await axios.post("http://localhost:5000/verify-token", {}, {
+        const { data } = await axios.post(`${root}/verify-token`, {}, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -34,9 +35,9 @@ const CompetitionPage = () => {
   useEffect(() => {
     const fetchContests = async () => {
       try {
-        const current = await axios.get('http://localhost:5000/current');
-        const upcoming = await axios.get('http://localhost:5000/upcoming');
-        const past = await axios.get('http://localhost:5000/past');
+        const current = await axios.get(`${root}/current`);
+        const upcoming = await axios.get(`${root}/upcoming`);
+        const past = await axios.get(`${root}/past`);
         setCurrentContests(current.data);
         setUpcomingContests(upcoming.data);
         setPastContests(past.data);

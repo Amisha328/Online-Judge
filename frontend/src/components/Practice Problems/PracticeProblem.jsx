@@ -7,6 +7,7 @@ import NavBar from '../NavBar/NavBar';
 
 const PracticeProblem = () => {
   let navigate = useNavigate();
+  const root = import.meta.env.VITE_BACKEND_URL;
   const [problems, setProblems] = useState([]);
   const [difficultyFilter, setDifficultyFilter] = useState('');
   const [tagFilter, setTagFilter] = useState('');
@@ -23,7 +24,7 @@ const PracticeProblem = () => {
   useEffect(() => {
     const verifyCookie = async () => {
       try {
-        const { data } = await axios.post("http://localhost:5000/verify-token", {}, {
+        const { data } = await axios.post(`${root}/verify-token`, {}, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -43,7 +44,7 @@ const PracticeProblem = () => {
   useEffect(() => {
     const fetchProblems = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/problems');
+        const response = await axios.get(`${root}/problems`);
         setProblems(response.data);
       } catch (error) {
         console.error('Error fetching the problems:', error);
@@ -55,7 +56,7 @@ const PracticeProblem = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/problems/${id}`);
+      await axios.delete(`${root}/problems/${id}`);
       setProblems(problems.filter(problem => problem._id !== id));
     } catch (error) {
       console.error('Error deleting the problem:', error);

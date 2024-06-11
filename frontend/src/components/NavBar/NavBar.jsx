@@ -7,10 +7,10 @@ import "./NavBar.css"
 
 export default function NavBar() {
   let navigate = useNavigate();
-
+  const root = import.meta.env.VITE_BACKEND_URL;
   const Logout = async () => {
         try {
-          await axios.post("http://localhost:5000/logout", {}, { withCredentials: true });
+          await axios.post(`${root}/logout`, {}, { withCredentials: true });
           navigate("/login");
         } catch (error) {
           console.error("Failed to logout:", error);

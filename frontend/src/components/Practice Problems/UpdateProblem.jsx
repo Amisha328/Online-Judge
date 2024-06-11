@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 export default function UpdateProblem() {
     let navigate = useNavigate();
+    const root = import.meta.env.VITE_BACKEND_URL;
     const { id } = useParams();
     const [currentProblem, setCurrentProblem] = useState({
         title: '',
@@ -20,7 +21,7 @@ export default function UpdateProblem() {
     useEffect(() => {
         const fetchProblem = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/problems/${id}`);
+                const response = await axios.get(`${root}/problems/${id}`);
                 const problem = response.data;
                 setCurrentProblem(problem);
             } catch (error) {
@@ -35,7 +36,7 @@ export default function UpdateProblem() {
         e.preventDefault();
         try {
             console.log('Submitting data:', currentProblem);
-            const response = await axios.put(`http://localhost:5000/problems/${id}`, currentProblem);
+            const response = await axios.put(`${root}/problems/${id}`, currentProblem);
             console.log(response);
             toast(`${response.data.message}!`, { position: "top-right" });
             setCurrentProblem({ title: '', description: '', difficulty: '', tags: '', timeLimit: 0, sampleTestCases: [{ input: '', expectedOutput: '', explanation: '' }], hiddenTestCases: [{ input: '', expectedOutput: '' }]});

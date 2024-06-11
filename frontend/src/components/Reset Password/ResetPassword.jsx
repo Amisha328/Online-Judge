@@ -6,13 +6,14 @@ import { ToastContainer, toast } from "react-toastify";
 export default function ResetPassword() {
   const { id, token } = useParams();
   const navigate = useNavigate();
+  const root = import.meta.env.VITE_BACKEND_URL;
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:5000/reset-password/${id}/${token}`, {password});
+      const response = await axios.post(`${root}/reset-password/${id}/${token}`, {password});
       toast(`${response.data}`, { position: "top-right" });
       // navigate("/login");
       setPassword("");

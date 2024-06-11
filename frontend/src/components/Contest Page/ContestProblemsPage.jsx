@@ -11,18 +11,18 @@ const ContestProblemsPage = () => {
   const { startDateTime, endDateTime } = location.state;
   const [problems, setProblems] = useState([]);
   const [timeLeft, setTimeLeft] = useState("");
-
+  const root = import.meta.env.VITE_BACKEND_URL;
  
   useEffect(() => {
     const fetchProblems = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/contests/${contestId}`);
+        const response = await axios.get(`${root}/contests/${contestId}`);
         const problemIds = response.data;
         console.log(problemIds);
 
         // Fetch details for each problem ID
         const problemPromises = problemIds.map((problemId) =>
-          axios.get(`http://localhost:5000/problems/${problemId}`)
+          axios.get(`${root}/problems/${problemId}`)
         );
 
         // Wait for all problem details to be fetched

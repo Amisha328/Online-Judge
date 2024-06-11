@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 export default function CreateProblem() {
           let navigate = useNavigate();
+          const root = import.meta.env.VITE_BACKEND_URL;
           const [currentProblem, setCurrentProblem] = useState({
                     title: '',
                     description: '',
@@ -18,7 +19,7 @@ export default function CreateProblem() {
           const handleSubmit = async (e) => {
                     e.preventDefault();
                     try {
-                        const response = await axios.post('http://localhost:5000/problems/add', currentProblem);
+                        const response = await axios.post(`${root}/problems/add`, currentProblem);
                         console.log(response);
                        
                         toast(`${response.data.message}!`, { position: "top-right" });

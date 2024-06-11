@@ -13,7 +13,7 @@ export default function Dashboard() {
   axios.defaults.withCredentials = true;
   const [cookies, setCookie, removeCookie] = useCookies(['token']);
   const [name, setName] = useState("");
-
+  const root = import.meta.env.VITE_BACKEND_URL;
   useEffect(() => {
     const verifyCookie = async () => {
       // console.log(cookies.token);
@@ -22,7 +22,7 @@ export default function Dashboard() {
       //   return;
       // }
       try {
-        const { data } = await axios.post("http://localhost:5000/verify-token", {}, {
+        const { data } = await axios.post(`${root}/verify-token`, {}, {
           headers: {
             "Content-Type": "application/json",
           },
