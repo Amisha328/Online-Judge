@@ -152,6 +152,41 @@ The primary goal of this project is to create a robust, scalable, and user-frien
 
 1. Fork this project by clicking the Fork button on top right corner of this page.
 2. Clone the repository by running following command in git:
-`git clone https://github.com/yourusername/online-judge.git`
+```
+git clone https://github.com/yourusername/online-judge.git
+```
+3. Go into the backend folder and install dependency:
+```
+cd "Online-Judge\backend"
+npm install
+```
 
+4. Go to the compiler folder and install dependency:
+```
+cd "Online-Judge\compiler"
+npm install
+```
+5.  Go to the frontend folder and install dependency:
+
+```
+cd "Online-Judge\frontend"
+npm install
+```
+
+### Running the Project:
+
+Start the backend server:
+```
+nodemon App.js
+```
+
+Start the compiler server:
+```
+nodemon App.js
+```
+
+Start the frontend server
+```
+npm run dev
+```
 
