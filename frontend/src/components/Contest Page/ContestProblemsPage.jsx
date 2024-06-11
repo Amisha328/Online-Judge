@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import NavBar from '../NavBar/NavBar';
 import './ContestProblemsPage.css';
 
 const ContestProblemsPage = () => {
+  const location = useLocation();
   const { contestId } = useParams();
-  console.log(contestId);
+  // console.log(contestId);
+  const { startDateTime, endDateTime } = location.state;
   const [problems, setProblems] = useState([]);
+  const [timeLeft, setTimeLeft] = useState("");
 
  
   useEffect(() => {
@@ -33,11 +36,49 @@ const ContestProblemsPage = () => {
     fetchProblems();
   }, [contestId]);
 
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const end = new Date(endDateTime);
+      const now = new Date();
+      const difference = end - now;
+      let timeLeft = {};
+
+      if (difference > 0) {
+        timeLeft = {
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60),
+        };
+      } else {
+        timeLeft = null;
+      }
+
+      return timeLeft;
+    };
+
+    const updateTimer = () => {
+      const newTimeLeft = calculateTimeLeft();
+      if (newTimeLeft) {
+        setTimeLeft(`${newTimeLeft.hours}h ${newTimeLeft.minutes}m ${newTimeLeft.seconds}s`);
+      } else {
+        setTimeLeft("Contest has ended");
+      }
+    };
+
+    const timer = setInterval(updateTimer, 1000);
+    updateTimer();
+
+    return () => clearInterval(timer);
+  }, [endDateTime]);
+
   return (
     <>
       <NavBar />
       <div className="container mt-5">
         <h1>Problems</h1>
+        <div className="timer">
+          <h3>Time Left: {timeLeft}</h3>
+        </div>
         {problems.length === 0 ? (
           <p>No problems found for this contest.</p>
         ) : (

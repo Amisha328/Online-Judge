@@ -1,7 +1,7 @@
 import React from "react";
 import "./Login.css";
 import { useState } from "react";
-import { FaGoogle } from 'react-icons/fa';
+// import { FaGoogle } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -193,8 +193,8 @@ export default function Login() {
             </a> 
         </div>                          
       </nav>
-      <div className="form-container container-fluid d-flex align-items-center justify-content-center vh-100">
-        <div className="card">
+      <div className="form-container container-fluid d-flex align-items-center justify-content-center">
+        <div className="card card-login">
           <form>
             <h2 className="title">Login</h2>
             <div className="input-container">
@@ -242,10 +242,10 @@ export default function Login() {
                 </div>
               </div>
               {messages.server && <div className="error-prompt">{messages.server}</div>}
-              <div className="or">OR</div>
+              {/* <div className="or">OR</div>
               <button className="google-btn">
                 <FaGoogle className="google-icon"/> Login with Google
-              </button>
+              </button> */}
             </div>
           </form>
         </div>

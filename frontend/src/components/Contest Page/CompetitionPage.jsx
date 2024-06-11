@@ -47,8 +47,8 @@ const CompetitionPage = () => {
     fetchContests();
   }, []);
 
-  const handleCompeteClick = (contestId) => {
-    navigate(`/competitions/${contestId}/problems`);
+  const handleCompeteClick = (contest) => {
+    navigate(`/competitions/${contest._id}/problems`,{ state: { startDateTime: contest.start_date_time, endDateTime: contest.end_date_time } });
   };
 
   const handleHost = () => {
@@ -74,7 +74,7 @@ const CompetitionPage = () => {
             <div key={contest._id} className="contest-card">
               <h3>{contest.title}</h3>
               <p>{new Date(contest.start_date_time).toLocaleString()} - {new Date(contest.end_date_time).toLocaleString()}</p>
-              <button onClick={() => handleCompeteClick(contest._id)}>Let's Compete</button>
+              <button onClick={() => handleCompeteClick(contest)}>Let's Compete</button>
             </div>
           ))
         )}

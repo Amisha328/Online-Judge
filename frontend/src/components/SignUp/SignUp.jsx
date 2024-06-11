@@ -3,7 +3,7 @@
 import { useState} from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './SignUp.css';
-import { FaGoogle } from 'react-icons/fa';
+// import { FaGoogle } from 'react-icons/fa';
 import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios';
 
@@ -216,9 +216,9 @@ function SignUp() {
           </a>
       </div>
       </nav>
-          
-      <div className="form-container container-fluid d-flex align-items-center justify-content-center vh-100">
-          <div className="card">
+     
+      <div className="form-container container-fluid d-flex align-items-center justify-content-center">
+          <div className="card card-register">
         <form>
           <h2 className="title">SignUp</h2>
           <div className="input-container">
@@ -279,14 +279,14 @@ function SignUp() {
                       <span>with your existing account</span>
                     </div>
                     {messages.server && <div className="error-prompt">{messages.server}</div>}
-                    <div className="or">OR</div>
+                    {/* <div className="or">OR</div>
                     <button className="google-btn">
                         <FaGoogle className="google-icon"/> Sign up with Google
-                     </button>
+                     </button> */}
                   </div>
                 </form>
           </div>    
-          </div>
+          </div> 
       </>
     );
   }

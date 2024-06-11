@@ -1,14 +1,14 @@
         
         .banner-title {
-          margin: 80px 80px;
+          margin: 150px 80px;
           color: black;
         }
-        
+       
         .banner-title h1 {
           font-size: 64px;
           margin-bottom: 30px;
         }
-        
+       
         .banner-title h1 span {
           color: rgb(194, 15, 15);
         }
