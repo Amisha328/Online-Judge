@@ -5,6 +5,7 @@ const { userVerification, logout } = require('../Middlewares/AuthMiddleware');
 const problemController = require('../controller/problemController');
 const { isAdmin } = require("../Middlewares/AdminMiddleware.js");
 const contestController = require("../controller/competitionController.js");
+const userController = require("../controller/userController.js")
 
 routing.post('/signup', controller.newUser);
 routing.post('/login', controller.loginUser);
@@ -25,6 +26,7 @@ routing.get('/past', contestController.pastContest);
 routing.post('/create-contest', contestController.createContest);
 routing.get('/competition/submissions/:problemId/:userId/:contestId', contestController.getCompetitionSubmissions);
 routing.get('/competitions/:contestId/leaderboard', contestController.getLeaderboard);
+routing.get('/:userId/profile', userController.getUserProfile);
 routing.all('*', controller.invalid);
 
 module.exports = routing;
