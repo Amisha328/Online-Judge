@@ -21,12 +21,13 @@ An Online Judge system that allows users to solve coding problems, submit soluti
         </tr>
 </table>
 
-### 2. Registration and Login Page:
+### 2. Registration/Login Page and Dashboard:
 
 <table>
         <tr> 
         <td><img src = "screenshots/registration_page.png"  width="800"></td>
         <td><img src = "screenshots/login_page.png" width="800"></td>
+        <td><img src = "screenshots/user_dashboard.png" width="800"></td>
         </tr>
 </table>
 
