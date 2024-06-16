@@ -18,6 +18,8 @@ A preflight request is basically an OPTION request sent to the server before the
 in order to ask which origin and which request options the server accepts.
 */
 
+// http://localhost:5173
+// https://online-judge-zeta.vercel.app
 app.use(
     cors({
       origin: ["http://localhost:5173"],
@@ -35,6 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 DBConnection();
+
 
 app.use('/', route);
 

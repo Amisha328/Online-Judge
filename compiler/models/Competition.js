@@ -13,8 +13,8 @@ const leaderboardEntrySchema = new Schema({
   user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   name: { type: String, default: null },
   score: { type: Number, default: 0 },
-  problems_solved: { type: Number, default: 0 },
   language: { type: String, required: true },
+  problems_solved: { type: Number, default: 0 },
   total_time: { type: Number, default: 0 }
 });
 

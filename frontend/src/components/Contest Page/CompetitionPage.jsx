@@ -103,6 +103,7 @@ const CompetitionPage = () => {
             <div key={contest._id} className="contest-card">
               <h3>{contest.title}</h3>
               <p>{new Date(contest.start_date_time).toLocaleString()} - {new Date(contest.end_date_time).toLocaleString()}</p>
+              <button onClick={() => handleCompeteClick(contest)}>View</button>
             </div>
           ))
         )}

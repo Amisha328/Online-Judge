@@ -23,6 +23,8 @@ routing.get('/current', contestController.currentContest);
 routing.get('/upcoming', contestController.upcomingContest);
 routing.get('/past', contestController.pastContest);
 routing.post('/create-contest', contestController.createContest);
+routing.get('/competition/submissions/:problemId/:userId/:contestId', contestController.getCompetitionSubmissions);
+routing.get('/competitions/:contestId/leaderboard', contestController.getLeaderboard);
 routing.all('*', controller.invalid);
 
 module.exports = routing;

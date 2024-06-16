@@ -73,9 +73,9 @@ const executeCompiledFile = (language, filePath, outPath, inputPath, timeLimt) =
 const getOutputExtension = (language) => {
   switch (language) {
     case "cpp":
-      return "out";
+      return "exe";
     case "c":
-      return "out";
+      return "exe";
     case "java":
       return "class";
     case "py":
@@ -103,9 +103,9 @@ const getCompileCommand = (language, filePath, outPath, inputPath) => {
 const getRunCommand = (language, filePath, outPath, inputPath) => {
   switch (language) {
     case "cpp":
-      return `cd ${outputPath} && ./${path.basename(outPath)} < ${inputPath}`;
+      return `cd ${outputPath} && .\\${path.basename(outPath)} < ${inputPath}`;
     case "c":
-      return `cd ${outputPath} && ./${path.basename(outPath)} < ${inputPath}`;
+      return `cd ${outputPath} && .\\${path.basename(outPath)} < ${inputPath}`;
     case "java":
       return `java ${filePath} < ${inputPath}`;
     case "py":

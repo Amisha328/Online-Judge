@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Editor from 'react-simple-code-editor';
@@ -7,10 +7,13 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
-import './ProbelmDetails.css'
+import './ProbelmDetails.css';
 
 const ProblemDetail = () => {
   const { id } = useParams();
+  const location = useLocation();
+  const contestId = location.state?.contestId || null;
+  // console.log(`Initial contestId: ${contestId}`);
   const [problem, setProblem] = useState(null);
   const [code, setCode] = useState('');
   const [language, setLanguage] = useState('cpp');
@@ -23,6 +26,7 @@ const ProblemDetail = () => {
   const [userId, setUserID] = useState("");
   const [submissions, setSubmissions] = useState([]);
   const root = import.meta.env.VITE_BACKEND_URL;
+
   useEffect(() => {
     const verifyCookie = async () => {
       try {
@@ -32,9 +36,7 @@ const ProblemDetail = () => {
           },
           withCredentials: true,
         });
-        console.log(data);
         setUserID(data.id);
-
       } catch (error) {
         console.error("Verification error:", error);
         navigate("/login");
@@ -54,90 +56,105 @@ const ProblemDetail = () => {
     };
 
     const fetchSubmissions = async () => {
+      // try {
+      //   const response = await axios.get(`${root}/problems/submissions/${id}/${userId}`)
+      //   setSubmissions(response.data);
+      // } catch (error) {
+      //   console.error('Error fetching submissions:', error);
+      // }
+
       try {
-        // console.log("ID: ",id);
-        const response = await axios.get(`${root}/problems/submissions/${id}/${userId}`)
+        let response;
+        if (contestId) {
+          response = await axios.get(`${root}/competition/submissions/${id}/${userId}/${contestId}`);
+        } else {
+          response = await axios.get(`${root}/problems/submissions/${id}/${userId}`);
+        }
         setSubmissions(response.data);
-        console.log(response)
       } catch (error) {
         console.error('Error fetching submissions:', error);
       }
     };
+  
 
     fetchProblem();
     fetchSubmissions();
-  }, [id, userId]);
+  }, [id, userId, contestId]);
 
-  const boilerplateCode = {
-    cpp: `#include <iostream>
+  useEffect(() => {
+    const boilerplateCode = {
+      cpp: `#include <iostream>
 
-    int main() { 
-      std::cout << "Hello from C++!"; 
-      return 0; 
-    }`,
-    java: `class HelloWorld {
-            public static void main(String[] args) {
-                System.out.println("Hello from Java!!");
-            }
-          }`,
-    py: `print("Hello from Python!!")`,
-    c: `#include <stdio.h>
-      
-          int main() {
-            printf("Hello from C language!!");
-            return 0;
-          }`
+int main() { 
+  std::cout << "Hello from C++!"; 
+  return 0; 
+}`,
+      java: `class HelloWorld {
+  public static void main(String[] args) {
+    System.out.println("Hello from Java!!");
+  }
+}`,
+      py: `print("Hello from Python!!")`,
+      c: `#include <stdio.h>
+
+int main() {
+  printf("Hello from C language!!");
+  return 0;
+}`
+    };
+
+    setCode(boilerplateCode[language]);
+  }, [language]);
+
+  const handleChangeLanguage = (event) => {
+    setLanguage(event.target.value);
   };
-      
-        useEffect(() => {
-          setCode(boilerplateCode[language]);
-        }, [language]);
-      
-        const handleChangeLanguage = (event) => {
-          setLanguage(event.target.value);
-        };
-      
-        const handleRun = async () => {
-          const payload = {
-            language,
-            code,
-            input,
-            timeLimit: problem.timeLimit
-          };
-          setLoading(true);
-          setOutput("");
-          setActiveTab('output');
-          try {
-            const { data } = await axios.post(import.meta.env.VITE_CODE_RUN, payload);
-            console.log(data);
-            setOutput(data.output);
-            setLoading(false);
-          } catch (error) {
-            console.log(error.response);
-          }
-        }
 
-        const handleSubmit = async () => {
-          const payload = {
-            userId,
-            language,
-            code,
-            problemId: id,
-            timeLimit: problem.timeLimit
-          };
-          setLoading(true);
-          setOutput("");
-          setVerdict("");
-          setActiveTab('verdict');
-          try {
-            const { data } = await axios.post(import.meta.env.VITE_CODE_SUBMIT, payload);
-            console.log(data);
-            setVerdict(data.verdict);
-            setLoading(false);
-          } catch (error) {
-            console.log(error.response);
-          }
-        }
+  const handleRun = async () => {
+    const payload = {
+      language,
+      code,
+      input,
+      timeLimit: problem.timeLimit
+    };
+    setLoading(true);
+    setOutput("");
+    setActiveTab('output');
+    try {
+      const { data } = await axios.post(import.meta.env.VITE_CODE_RUN, payload);
+      setOutput(data.output);
+    } catch (error) {
+      console.log(error.response);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async () => {
+    const payload = {
+      userId,
+      language,
+      code,
+      problemId: id,
+      timeLimit: problem.timeLimit
+    };
+    console.log(`contestId: ${contestId}`)
+    if (contestId) {
+      payload.contestId = contestId; // Add contestId to payload if it exists
+    }
+    setLoading(true);
+    setOutput("");
+    setVerdict("");
+    setActiveTab('verdict');
+    try {
+      const { data } = await axios.post(import.meta.env.VITE_CODE_SUBMIT, payload);
+      setVerdict(data.verdict);
+    } catch (error) {
+      console.log(error.response);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="container-fluid mt-5">

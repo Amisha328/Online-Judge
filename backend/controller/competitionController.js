@@ -1,4 +1,6 @@
+const mongoose = require('mongoose');
 const Competition = require('../models/Competition');
+const User = require('../models/User')
 
 exports.currentContest = async (req, res) => {
   const now = new Date();
@@ -62,13 +64,100 @@ exports.getProblems = async(req, res) => {
   try {
     // console.log(req.params.contestId);
     const contest = await Competition.findById(req.params.contestId);
-    console.log(contest);
+    // console.log(contest);
     if (!contest) {
       return res.status(404).json({ message: 'Contest not found' });
     }
-    console.log(contest);
+    // console.log(contest);
     res.json(contest.problems_included);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
 }
+
+const updateLeaderboard = async (contestId) => {
+  try {
+    const competition = await Competition.findById(contestId);
+    console.log("Inside Update Leaderboard");
+    if (!competition) {
+      console.error('Competition not found');
+      return;
+    }
+
+    const leaderboard = {};
+
+    // Iterate over submissions to calculate scores and time
+    for (const submission of competition.submissions) {
+      const userId = submission.user_id._id.toString();
+      // const user = submission.user_id;
+      const user = await User.findById(userId);
+
+      if (!leaderboard[userId]) {
+        leaderboard[userId] = {
+          user_id: user._id,
+          name: user.name,
+          problems_solved: 0,
+          language: submission.language,
+          total_time: 0,
+          score: 0,
+        };
+      }
+
+      if (submission.verdict === 'Accepted') {
+        leaderboard[userId].problems_solved += 1;
+        leaderboard[userId].total_time += (new Date(submission.submissionTime) - competition.start_date_time) / 1000; // Time in seconds
+        leaderboard[userId].score += 10; 
+      }
+    }
+
+    competition.leaderboard = Object.values(leaderboard);
+    competition.leaderboard.sort((a, b) => {
+      if (b.score === a.score) {
+        return a.total_time - b.total_time;
+      }
+      return b.score - a.score;
+    });
+
+    await competition.save();
+  } catch (error) {
+    console.error('Error updating leaderboard:', error);
+  }
+};
+
+exports.getLeaderboard = async (req, res) => {
+  const { contestId } = req.params;
+  await updateLeaderboard(contestId); // Ensure the leaderboard is updated before fetching it
+  try {
+    const competition = await Competition.findById(contestId);
+    if (!competition) {
+      return res.status(404).json({ error: 'Competition not found' });
+    }
+
+    res.status(200).json(competition.leaderboard);
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.getCompetitionSubmissions = async (req, res) => {
+  const { problemId, userId, contestId } = req.params;
+
+  try {
+    const competition = await Competition.findById(contestId);
+
+    if (!competition) {
+      return res.status(404).json({ error: 'Competition not found' });
+    }
+
+    const submissions = competition.submissions.filter(submission => 
+      submission.problem_id._id.toString() === problemId && 
+      submission.user_id._id.toString() === userId
+    );
+
+    res.status(200).json(submissions);
+  } catch (error) {
+    console.error('Error fetching competition submissions:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
