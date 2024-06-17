@@ -2,7 +2,7 @@
 An Online Judge system that allows users to solve coding problems, submit solutions, and receive feedback on their submissions. The platform supports multiple programming languages and provides features like user authentication, authorization, code execution, problem management, and contest hosting.<br/><br/>
 
 - [Inspiration Behind the Project:](#inspiration-behind-the-project)
-- [Targets:](#targets)
+- [Target Goal:](#target-goal)
 - [Features:](#features)
     - [1. USER AUTHENTICATION:](#1-user-authentication)
     - [2. FORGET PASSWORD:](#2-forget-password)
@@ -10,6 +10,7 @@ An Online Judge system that allows users to solve coding problems, submit soluti
     - [4. PROBLEM LIST PAGE:](#4-problem-list-page)
     - [5. CODE EXECUTION AND SUBMISSION:](#5-code-execution-and-submission)
     - [6. CLEANUP SCHEDULER:](#6-cleanup-scheduler)
+    - [7. CONTEST:](#7-contest)
 
 <h2>ScreenShots</h2>
 
@@ -110,22 +111,24 @@ The primary goal of this project is to create a robust, scalable, and user-frien
 #### 2. FORGET PASSWORD:
 - [x]  Allows users to reset their passwords via email using the `Nodemailer` library.
   
-### 3. AUTHORIZATION: 
+#### 3. AUTHORIZATION: 
 - [x] Only admin users can create, update, and delete problems, as well as host contests.
 
-### 4. PROBLEM LIST PAGE:
+#### 4. PROBLEM LIST PAGE:
 - [x] Lists all available problems. Users can select a problem to view details, run code, and submit solutions.
 - [x] Users can submit solutions in C++, Java, C, or Python.
 
-### 5. CODE EXECUTION AND SUBMISSION:
+#### 5. CODE EXECUTION AND SUBMISSION:
 - [x] Isolates the execution environment of the submitted code, ensuring secure and consistent execution without affecting the host system using `Docker`.
 - [x] Executes submitted code against sample and hidden test cases.
 - [x] Provides immediate feedback on submissions (e.g., Accepted, Wrong Answer, Runtime Error, Time Limit Exceeded).
 - [x] Dependencies: `uuid, fs, path, child_process`
-
-     
-### 6. CLEANUP SCHEDULER
+       
+#### 6. CLEANUP SCHEDULER
 - [x] Clears input, code, and output files created during execution every three hours to keep the application light using `node-cron` dependency.
+
+#### 7. CONTEST:
+- [x] Users can participate in ongoing contests and view the leaderboard at the end of the contest.
 
 ## Technologies Used:
 
