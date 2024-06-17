@@ -2,7 +2,7 @@
 An Online Judge system that allows users to solve coding problems, submit solutions, and receive feedback on their submissions. The platform supports multiple programming languages and provides features like user authentication, authorization, code execution, problem management, and contest hosting.<br/><br/>
 
 - [Inspiration Behind the Project:](#inspiration-behind-the-project)
-- [Targets:](#targets)
+- [Target Goal:](#target-goal)
 - [Features:](#features)
     - [1. USER AUTHENTICATION:](#1-user-authentication)
     - [2. FORGET PASSWORD:](#2-forget-password)
@@ -10,6 +10,7 @@ An Online Judge system that allows users to solve coding problems, submit soluti
     - [4. PROBLEM LIST PAGE:](#4-problem-list-page)
     - [5. CODE EXECUTION AND SUBMISSION:](#5-code-execution-and-submission)
     - [6. CLEANUP SCHEDULER:](#6-cleanup-scheduler)
+    - [7. CONTEST:](#7-contest)
 
 <h2>ScreenShots</h2>
 
