@@ -48,7 +48,9 @@ exports.newUser = async (req, res) => {
 
     res.cookie("token", token, {
       withCredentials: true,
-      httpOnly: true,
+      // httpOnly: true,
+      secure: true,
+      sameSite: 'None',
     });
 
     res.status(200).json({ message: "You have successfully registered!", user });
@@ -95,7 +97,9 @@ exports.loginUser = async (req, res) => {
 
     const options = {
       expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-      httpOnly: true,
+      // httpOnly: true,
+      secure: true,
+      sameSite: 'None',
     };
 
    // send the token

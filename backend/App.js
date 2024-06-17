@@ -18,11 +18,9 @@ A preflight request is basically an OPTION request sent to the server before the
 in order to ask which origin and which request options the server accepts.
 */
 
-// http://localhost:5173
-// https://online-judge-zeta.vercel.app
 app.use(
     cors({
-      origin: ["http://localhost:5173"],
+      origin: [process.env.FRONTEND_URL],
       methods: ["GET", "POST", "PUT", "DELETE"],
       credentials: true,
     })

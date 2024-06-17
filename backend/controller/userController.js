@@ -20,7 +20,7 @@ exports.getUserProfile = async (req, res) => {
                             problemsSolved.push({
                               problemDetails: {
                                 title: problem.title,
-                                description: problem.description,
+                                tags: problem.tags,
                                 difficulty: problem.difficulty,
                               },
                               submissionTime: submission.submissionTime,
