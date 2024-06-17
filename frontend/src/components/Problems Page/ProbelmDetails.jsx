@@ -138,7 +138,7 @@ int main() {
       problemId: id,
       timeLimit: problem.timeLimit
     };
-    console.log(`contestId: ${contestId}`)
+    // console.log(`contestId: ${contestId}`)
     if (contestId) {
       payload.contestId = contestId; // Add contestId to payload if it exists
     }

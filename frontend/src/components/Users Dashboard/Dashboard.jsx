@@ -31,8 +31,6 @@ export default function Dashboard() {
         if (status) {
           setUserId(id);
           setName(user);
-          console.log(`user id: ${userId}`);
-          console.log(`user name: ${name}`);
           toast(`Hello, ${user}!`, { position: "top-right" });
         } else {
           removeCookie("token");
@@ -49,11 +47,11 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      console.log(userId);
+      // console.log(userId);
       if (userId) {
         try {
           const response = await axios.get(`${root}/${userId}/profile`);
-          console.log(response);
+          // console.log(response);
           setUser(response.data.user);
           setProblemsSolved(response.data.problemsSolved);
         } catch (error) {

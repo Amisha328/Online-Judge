@@ -33,8 +33,8 @@ function SignUp() {
   });
   
   function validateName(name){
-    console.log("Validate name called");
-    console.log(name);
+    // console.log("Validate name called");
+    // console.log(name);
     if(name.toString().length < 3) {
       setMessages({
         ...messages,
@@ -48,7 +48,7 @@ function SignUp() {
     }
 }
   function validatePhone(phoneNo){
-    console.log("Phone validation "+phoneNo);
+    // console.log("Phone validation "+phoneNo);
     if(phoneNo.toString().length < 10 || phoneNo.toString().length > 10) 
       {
         setMessages({
@@ -111,7 +111,7 @@ function SignUp() {
   
   const handleOnBlur = (event) => {
     if (event.target) {
-      console.log(event);
+      // console.log(event);
       switch (event.target.name) {
         case "name":
           setTouched({ ...touched, name: true });
@@ -137,7 +137,7 @@ function SignUp() {
   
   const handleChange = (event) => {
     if (event?.target) {
-      console.log(event);
+      // console.log(event);
       switch (event.target.name) {
         case "name":
           if (touched.name) {
@@ -176,9 +176,9 @@ function SignUp() {
 
     const handleRegister = async (event) => {
       event.preventDefault();
-      console.log(
-        `Name: ${user.name} phoneNo: ${user.phoneNo} Email: ${user.email} Password: ${user.password}`
-      );
+      // console.log(
+      //   `Name: ${user.name} phoneNo: ${user.phoneNo} Email: ${user.email} Password: ${user.password}`
+      // );
       
       // try{
       //     const response = await fetch("http://localhost:5000/signup", {
@@ -196,7 +196,7 @@ function SignUp() {
 
       try {
         const response = await axios.post(`${root}/signup`, user);
-        console.log(response);
+        // console.log(response);
         navigate('/login');
       } catch (error) {
         if (error.response && error.response.data) {

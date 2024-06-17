@@ -77,7 +77,7 @@ export default function Login() {
 
         const handleOnBlur = (event) => {
           if (event.target) {
-            console.log(event);
+            // console.log(event);
             switch (event.target.name) {
               case "email":
                 setTouched({ ...touched, email: true });
@@ -168,7 +168,7 @@ export default function Login() {
               withCredentials: true,  // Important to send cookies
             });
       
-            console.log(response.data);
+            // console.log(response.data);
             // console.log(response.data.user._id);
             if (response.data.success) {
               navigate("/dashboard");
