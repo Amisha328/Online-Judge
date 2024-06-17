@@ -110,22 +110,24 @@ The primary goal of this project is to create a robust, scalable, and user-frien
 #### 2. FORGET PASSWORD:
 - [x]  Allows users to reset their passwords via email using the `Nodemailer` library.
   
-### 3. AUTHORIZATION: 
+#### 3. AUTHORIZATION: 
 - [x] Only admin users can create, update, and delete problems, as well as host contests.
 
-### 4. PROBLEM LIST PAGE:
+#### 4. PROBLEM LIST PAGE:
 - [x] Lists all available problems. Users can select a problem to view details, run code, and submit solutions.
 - [x] Users can submit solutions in C++, Java, C, or Python.
 
-### 5. CODE EXECUTION AND SUBMISSION:
+#### 5. CODE EXECUTION AND SUBMISSION:
 - [x] Isolates the execution environment of the submitted code, ensuring secure and consistent execution without affecting the host system using `Docker`.
 - [x] Executes submitted code against sample and hidden test cases.
 - [x] Provides immediate feedback on submissions (e.g., Accepted, Wrong Answer, Runtime Error, Time Limit Exceeded).
 - [x] Dependencies: `uuid, fs, path, child_process`
-
-     
-### 6. CLEANUP SCHEDULER
+       
+#### 6. CLEANUP SCHEDULER
 - [x] Clears input, code, and output files created during execution every three hours to keep the application light using `node-cron` dependency.
+
+#### 7. CONTEST:
+- [x] Users can participate in ongoing contests and view the leaderboard at the end of the contest.
 
 ## Technologies Used:
 
