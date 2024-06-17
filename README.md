@@ -68,6 +68,7 @@ An Online Judge system that allows users to solve coding problems, submit soluti
         <tr> 
         <td><img src = "screenshots/problems_page.png"  width="900"></td>
         <td><img src = "screenshots/problem_submission.png"  width="900"></td>
+        <td><img src = "screenshots/multi-language-support.png"  width="900"></td>
         </tr>
 </table>
 
