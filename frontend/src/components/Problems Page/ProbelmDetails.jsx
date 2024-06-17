@@ -263,7 +263,7 @@ int main() {
                   padding={10}
                   style={{
                     fontFamily: '"Fira code", "Fira Mono", monospace',
-                      fontSize: 12,
+                      fontSize: 13,
                       outline: 'none',
                       border: 'none',
                       minHeight: '100%',
