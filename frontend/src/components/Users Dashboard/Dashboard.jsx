@@ -71,7 +71,7 @@ export default function Dashboard() {
       {/* <div className="home_page">
         <h4>Welcome <span>{name}</span></h4>
       </div> */}
-      <div className="container mt-5">
+      <div className="container mt-5 d-flex flex-column align-items-center">
         {user ? (
            <div className="card main-profile mb-5">
            <h2 className="text-center">User Profile</h2>
@@ -84,15 +84,16 @@ export default function Dashboard() {
         ) : (
           <div>Loading...</div>
         )}
-        <h3>Problems Solved</h3>
+        <h2 className="text-center mb-3"><b>Problems Solved</b></h2>
         {problemsSolved.length === 0 ? (
           <div>No problems solved yet.</div>
         ) : (
-          <table className="table table-striped mt-3">
+          <table className="table table-striped thead-wrapper mt-3">
             <thead className="thead-dark">
               <tr>
                 <th scope="col">Title</th>
                 <th scope="col">Difficulty</th>
+                <th scope="col">Tags</th>
                 <th scope="col">Solved At</th>
               </tr>
             </thead>
@@ -101,6 +102,7 @@ export default function Dashboard() {
                 <tr key={index}>
                   <td>{problem.problemDetails.title}</td>
                   <td>{problem.problemDetails.difficulty}</td>
+                  <td>{problem.problemDetails.tags}</td>
                   <td>{new Date(problem.submissionTime).toLocaleString()}</td>
                 </tr>
               ))}
