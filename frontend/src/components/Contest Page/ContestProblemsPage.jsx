@@ -92,7 +92,7 @@ const ContestProblemsPage = () => {
         {contestEnded ? (
           <div>
             <h1>Leaderboard</h1>
-            {leaderboard.length === 0 ? (
+            {contestEnded && leaderboard.length === 0 ? (
               <p>Loading leaderboard...</p>
             ) : (
               <table className="table table-striped">

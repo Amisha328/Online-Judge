@@ -85,3 +85,13 @@
             padding: 5px;
             background: #fff;
           }
+
+          .red{
+            color: red;
+            font-weight: bold;
+          }
+
+          .green{
+            color: green;
+            font-weight: bold;
+          }

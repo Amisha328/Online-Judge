@@ -25,6 +25,7 @@ const ProblemDetail = () => {
   const [verdict, setVerdict] = useState('');
   const [userId, setUserID] = useState("");
   const [submissions, setSubmissions] = useState([]);
+  const [verdictStatus, setVerdictStatus] = useState('');
   const root = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
@@ -70,7 +71,8 @@ const ProblemDetail = () => {
         } else {
           response = await axios.get(`${root}/problems/submissions/${id}/${userId}`);
         }
-        setSubmissions(response.data);
+        const sortedSubmissions = response.data.sort((a, b) => new Date(b.submissionTime) - new Date(a.submissionTime));
+        setSubmissions(sortedSubmissions);
       } catch (error) {
         console.error('Error fetching submissions:', error);
       }
@@ -149,6 +151,7 @@ int main() {
     try {
       const { data } = await axios.post(import.meta.env.VITE_CODE_SUBMIT, payload);
       setVerdict(data.verdict);
+      (data.status == false)? setVerdictStatus('red'): setVerdictStatus('green');
     } catch (error) {
       console.log(error.response);
     } finally {
@@ -309,16 +312,16 @@ int main() {
               {loading && <div className="loader mt-4"></div>}
               <p style={{
                 fontFamily: '"Fira code", "Fira Mono", monospace',
-                fontSize: 13
+                fontSize: 15
               }}>{output}</p>
             </div>
           )}
           {activeTab === 'verdict' && (
             <div className="outputbox mt-4 bg-dark text-white p-3 rounded" style={{ height: '150px' }}>
               {loading && <div className="loader mt-4"></div>}
-              <p style={{
+              <p className = {verdictStatus} style={{
                 fontFamily: '"Fira code", "Fira Mono", monospace',
-                fontSize: 13
+                fontSize: 15
               }}>{verdict}
               </p>
             </div>
