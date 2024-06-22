@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
@@ -16,6 +15,8 @@ export default function Dashboard() {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState(null);
   const [problemsSolved, setProblemsSolved] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const problemsPerPage = 5;
   const root = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
@@ -38,20 +39,17 @@ export default function Dashboard() {
         }
       } catch (error) {
         console.error("Verification error:", error);
-        // removeCookie("token");
         navigate("/");
       }
     };
     verifyCookie();
-  }, []);
+  }, [navigate, root, removeCookie]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      // console.log(userId);
       if (userId) {
         try {
           const response = await axios.get(`${root}/${userId}/profile`);
-          // console.log(response);
           setUser(response.data.user);
           setProblemsSolved(response.data.problemsSolved);
         } catch (error) {
@@ -63,22 +61,25 @@ export default function Dashboard() {
     fetchUserProfile();
   }, [userId, root]);
 
+  // Calculate pagination
+  const indexOfLastProblem = currentPage * problemsPerPage;
+  const indexOfFirstProblem = indexOfLastProblem - problemsPerPage;
+  const currentProblemsSolved = problemsSolved.slice(indexOfFirstProblem, indexOfLastProblem);
+  const totalPages = Math.ceil(problemsSolved.length / problemsPerPage);
+
   return (
     <>
-     <NavBar/>
-      {/* <div className="home_page">
-        <h4>Welcome <span>{name}</span></h4>
-      </div> */}
+      <NavBar/>
       <div className="container mt-5 d-flex flex-column align-items-center">
         {user ? (
-           <div className="card main-profile mb-5">
-           <h2 className="text-center">User Profile</h2>
-           <div className="card-body profile-card">
-             <h5 className="card-title">{user.name}</h5>
-             <p className="card-text">Email: {user.email}</p>
-             <p className="card-text">Phone: {user.phoneNo}</p>
-           </div>
-         </div>
+          <div className="card main-profile mb-5">
+            <h2 className="text-center">User Profile</h2>
+            <div className="card-body profile-card">
+              <h5 className="card-title">{user.name}</h5>
+              <p className="card-text">Email: {user.email}</p>
+              <p className="card-text">Phone: {user.phoneNo}</p>
+            </div>
+          </div>
         ) : (
           <div>Loading...</div>
         )}
@@ -86,26 +87,45 @@ export default function Dashboard() {
         {problemsSolved.length === 0 ? (
           <div>No problems solved yet.</div>
         ) : (
-          <table className="table table-striped thead-wrapper mt-3">
-            <thead className="thead-dark">
-              <tr>
-                <th scope="col">Title</th>
-                <th scope="col">Difficulty</th>
-                <th scope="col">Tags</th>
-                <th scope="col">Solved At</th>
-              </tr>
-            </thead>
-            <tbody>
-              {problemsSolved.map((problem, index) => (
-                <tr key={index}>
-                  <td>{problem.problemDetails.title}</td>
-                  <td>{problem.problemDetails.difficulty}</td>
-                  <td>{problem.problemDetails.tags}</td>
-                  <td>{new Date(problem.submissionTime).toLocaleString()}</td>
+          <>
+            <table className="table table-striped thead-wrapper mt-3">
+              <thead className="thead-dark">
+                <tr>
+                  <th scope="col">Title</th>
+                  <th scope="col">Difficulty</th>
+                  <th scope="col">Tags</th>
+                  <th scope="col">Solved At</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {currentProblemsSolved.map((problem, index) => (
+                  <tr key={index}>
+                    <td>{problem.problemDetails.title}</td>
+                    <td>{problem.problemDetails.difficulty}</td>
+                    <td>{problem.problemDetails.tags}</td>
+                    <td>{new Date(problem.submissionTime).toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="d-flex justify-content-between mt-10">
+              <button
+                className="btn btn-secondary mx-5"
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              <div>Page {currentPage} of {totalPages}</div>
+              <button
+                className="btn btn-secondary mx-5"
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          </>
         )}
       </div>
       <ToastContainer />
