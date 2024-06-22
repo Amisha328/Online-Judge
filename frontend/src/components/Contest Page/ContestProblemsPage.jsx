@@ -73,9 +73,9 @@ const ContestProblemsPage = () => {
     if (contestEnded) {
       const fetchLeaderboard = async () => {
         try {
-          console.log(contestId);
+          // console.log(contestId);
           const response = await axios.get(`${root}/competitions/${contestId}/leaderboard`);
-          console.log(response.data);
+          // console.log(response.data);
           setLeaderboard(response.data);
         } catch (err) {
           console.error('Error fetching leaderboard:', err);

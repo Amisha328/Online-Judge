@@ -35,9 +35,9 @@ export default function UpdateProblem() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log('Submitting data:', currentProblem);
+            // console.log('Submitting data:', currentProblem);
             const response = await axios.put(`${root}/problems/${id}`, currentProblem);
-            console.log(response);
+            // console.log(response);
             toast(`${response.data.message}!`, { position: "top-right" });
             setCurrentProblem({ title: '', description: '', difficulty: '', tags: '', timeLimit: 0, sampleTestCases: [{ input: '', expectedOutput: '', explanation: '' }], hiddenTestCases: [{ input: '', expectedOutput: '' }]});
         } catch (error) {

@@ -21,7 +21,7 @@ const CompetitionPage = () => {
           },
           withCredentials: true,
         });
-        console.log(data);
+        // console.log(data);
         setIsAdmin(data.isAdmin);
 
       } catch (error) {

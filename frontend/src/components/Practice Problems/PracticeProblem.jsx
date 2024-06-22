@@ -26,7 +26,7 @@ const PracticeProblem = () => {
           },
           withCredentials: true,
         });
-        console.log(data);
+        // console.log(data);
         setIsAdmin(data.isAdmin);
       } catch (error) {
         console.error("Verification error:", error);

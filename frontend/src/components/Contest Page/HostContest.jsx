@@ -35,7 +35,7 @@ const HostContest = () => {
 
         try {
             const response = await axios.post(`${root}/create-contest`, payload);
-            console.log('Competition created:', response.data);
+            // console.log('Competition created:', response.data);
             toast(`${response.data.message}!`, { position: "top-right" });
         } catch (error) {
             toast("Unauthorized request", { position: "top-right" })

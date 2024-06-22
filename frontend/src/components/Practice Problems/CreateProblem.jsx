@@ -20,13 +20,13 @@ export default function CreateProblem() {
                     e.preventDefault();
                     try {
                         const response = await axios.post(`${root}/problems/add`, currentProblem);
-                        console.log(response);
+                        // console.log(response);
                        
                         toast(`${response.data.message}!`, { position: "top-right" });
                       
                         setCurrentProblem({ title: '', description: '', difficulty: '', tags: '', timeLimit: 0, sampleTestCases: [{ input: '', expectedOutput: '', explanation: '' }] });
                     } catch (error) {
-                        console.log(error.response);
+                        // console.log(error.response);
                         toast("Unauthorized request", { position: "top-right" })
                         console.error('Error creating problem:', error);
                     }
