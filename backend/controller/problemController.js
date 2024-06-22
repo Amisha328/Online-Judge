@@ -16,8 +16,15 @@ exports.addProblem = async (req, res) => {
 // Get all problems
 exports.getAllProblems = async (req, res) => {
   try {
+    const { userId } = req.query;
     const problems = await Problem.find();
-    res.status(200).json(problems);
+
+    const problemsWithStatus = problems.map(problem => {
+      const accepted = problem.submissions.some(submission => submission.userId.toString() === userId && submission.verdict === 'Accepted');
+      return { ...problem.toObject(), accepted };
+    });
+
+    res.status(200).json(problemsWithStatus);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
