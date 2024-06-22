@@ -24,7 +24,10 @@ module.exports.userVerification = (req, res) => {
 
 module.exports.logout = (req, res) => {
           try{
-                    res.clearCookie("token");
+                    res.clearCookie("token",{
+                      sameSite: 'None',
+                      secure: true,
+                    });
                     res.status(200).send({
                               message: "You have successfully logged out!",
                               success: true,
