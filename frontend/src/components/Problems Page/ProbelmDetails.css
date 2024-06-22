@@ -1,6 +1,8 @@
         .problem-description {
           border-right: 1px solid #ddd;
           padding-right: 20px;
+          height: 700px;
+          overflow-y: scroll;
         }
         .problem-text{
           white-space: pre-wrap;
@@ -23,7 +25,7 @@
         .editor-wrapper {
           border: 1px solid #c9c8c8;
           border-radius: 4px;
-          height: 300px;
+          height: 400px;
           overflow-y: auto;
         }
         

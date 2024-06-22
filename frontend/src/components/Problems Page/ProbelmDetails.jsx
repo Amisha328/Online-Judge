@@ -304,11 +304,11 @@ int main() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               className="outputbox mt-4 bg-dark text-white p-3 rounded"
-              style={{ height: '150px'}}
+              style={{ height: '200px'}}
             ></textarea>
           )}
           {activeTab === 'output' && (
-            <div className="outputbox mt-4 bg-dark text-white p-3 rounded" style={{ height: '150px' }}>
+            <div className="outputbox mt-4 bg-dark text-white p-3 rounded" style={{ height: '200px' }}>
               {loading && <div className="loader mt-4"></div>}
               <p style={{
                 fontFamily: '"Fira code", "Fira Mono", monospace',
@@ -317,7 +317,7 @@ int main() {
             </div>
           )}
           {activeTab === 'verdict' && (
-            <div className="outputbox mt-4 bg-dark text-white p-3 rounded" style={{ height: '150px' }}>
+            <div className="outputbox mt-4 bg-dark text-white p-3 rounded" style={{ height: '200px' }}>
               {loading && <div className="loader mt-4"></div>}
               <p className = {verdictStatus} style={{
                 fontFamily: '"Fira code", "Fira Mono", monospace',

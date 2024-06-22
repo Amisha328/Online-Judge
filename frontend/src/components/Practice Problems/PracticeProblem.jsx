@@ -13,6 +13,7 @@ const PracticeProblem = () => {
   const [tagFilter, setTagFilter] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userId, setUserId] = useState('');
 
   const [currentPage, setCurrentPage] = useState(1);
   const problemsPerPage = 10;
@@ -26,7 +27,8 @@ const PracticeProblem = () => {
           },
           withCredentials: true,
         });
-        // console.log(data);
+        console.log(data);
+        setUserId(data.id);
         setIsAdmin(data.isAdmin);
       } catch (error) {
         console.error("Verification error:", error);
@@ -39,15 +41,24 @@ const PracticeProblem = () => {
   useEffect(() => {
     const fetchProblems = async () => {
       try {
-        const response = await axios.get(`${root}/problems`);
-        setProblems(response.data);
+        if (userId) {
+          const response = await axios.get(`${root}/problems`, {
+            params: { userId },
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          });
+          console.log('Problems fetched:', response.data);
+          setProblems(response.data);
+        }
       } catch (error) {
         console.error('Error fetching the problems:', error);
       }
     };
 
     fetchProblems();
-  }, [root]);
+  }, [root, userId]);
 
   const handleDelete = async (id) => {
     try {
@@ -146,10 +157,11 @@ const PracticeProblem = () => {
           <tbody>
             {currentProblems.map(problem => (
               <tr key={problem._id} className="problem-row">
-                <td>
-                  <Link to={`/problems/${problem._id}`} className="problem-link">
-                    {problem.title}
-                  </Link>
+              <td>
+                <Link to={`/problems/${problem._id}`} className="problem-link">
+                  {problem.title}
+                </Link>
+                {problem.accepted && <span className="check-mark">✅</span>}
                 </td>
                 <td>{problem.difficulty}</td>
                 <td>{problem.tags.split(',').map(tag => tag.trim()).join(', ')}</td>
