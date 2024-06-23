@@ -27,7 +27,6 @@ const PracticeProblem = () => {
           },
           withCredentials: true,
         });
-        console.log(data);
         setUserId(data.id);
         setIsAdmin(data.isAdmin);
       } catch (error) {
@@ -49,7 +48,6 @@ const PracticeProblem = () => {
             },
             withCredentials: true,
           });
-          console.log('Problems fetched:', response.data);
           setProblems(response.data);
         }
       } catch (error) {
