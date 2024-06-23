@@ -83,7 +83,7 @@ export default function Dashboard() {
         ) : (
           <div>Loading...</div>
         )}
-        <h2 className="text-center mb-3"><b>Problems Solved</b></h2>
+        <h2 className="text-center mb-3"><b>Contest Problems Solved</b></h2>
         {problemsSolved.length === 0 ? (
           <div>No problems solved yet.</div>
         ) : (
