@@ -178,6 +178,7 @@ export default function Login() {
             } else {
               setMessages({ ...messages, server: "An error occurred. Please try again." });
             }
+            setLoading(false);
             console.log('There was an error logging in the user!', error);
           }
         };
@@ -246,9 +247,9 @@ export default function Login() {
               </button> */}
             </div>
           </form>
-          {loading && <div className="auth-loader mt-4"></div>}
         </div>
       </div>
+      {loading && <div className="auth-loader mt-4"></div>}
     </>
   );
 }

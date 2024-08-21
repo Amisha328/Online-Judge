@@ -10,6 +10,7 @@ import axios from 'axios';
 function SignUp() {
   let navigate = useNavigate();
   const root = import.meta.env.VITE_BACKEND_URL;
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({
     name: "",
     phoneNo: "",
@@ -194,9 +195,11 @@ function SignUp() {
       //   console.log('There was an error registering the user!', error);
       // }
 
+      setLoading(true);
       try {
         const response = await axios.post(`${root}/signup`, user);
         // console.log(response);
+        setLoading(false);
         navigate('/login');
       } catch (error) {
         if (error.response && error.response.data) {
@@ -204,6 +207,7 @@ function SignUp() {
         } else {
           setMessages({ ...messages, server: "An error occurred. Please try again." });
         }
+        setLoading(false);
       }
     
      // navigate('/login');
@@ -288,6 +292,7 @@ function SignUp() {
                 </form>
           </div>    
           </div> 
+          {loading && <div className="auth-loader mt-4"></div>}
       </>
     );
   }

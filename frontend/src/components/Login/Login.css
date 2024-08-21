@@ -117,12 +117,22 @@
   align-items: center;
 }
 
+.auth-loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
 .auth-loader {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid rgb(3, 65, 111);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  width: 40px;
+  height: 40px;
+  border: 5px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  animation: spin 1s linear infinite;
-  margin: auto;
+  border-top-color: rgb(3, 65, 111);
+  animation: spin 1s ease-in-out infinite;
 }
