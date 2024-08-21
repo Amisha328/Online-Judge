@@ -12,6 +12,7 @@ export default function Login() {
   let navigate = useNavigate();
   const root = import.meta.env.VITE_BACKEND_URL;
   // const [userId, setUserId] = useState("");
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -155,7 +156,8 @@ export default function Login() {
           // }
 
           
-
+          setLoading(true);
+        
           try {
             const response = await axios.post(`${root}/login`, user, {
               headers: {
@@ -163,7 +165,9 @@ export default function Login() {
               },
               withCredentials: true,  // Important to send cookies
             });
+
             if (response.data.success) {
+              setLoading(false);
               navigate("/dashboard");
             } else {
               setMessages({ ...messages, server: response.data.message });
@@ -243,6 +247,7 @@ export default function Login() {
             </div>
           </form>
         </div>
+        {loading && <div className="  mt-4"></div>}
       </div>
     </>
   );
