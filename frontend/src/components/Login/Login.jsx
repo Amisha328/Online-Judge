@@ -246,8 +246,8 @@ export default function Login() {
               </button> */}
             </div>
           </form>
+          {loading && <div className="auth-loader mt-4"></div>}
         </div>
-        {loading && <div className="  mt-4"></div>}
       </div>
     </>
   );
