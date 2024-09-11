@@ -94,6 +94,27 @@
           }
 
           .green{
-            color: green;
+            color: rgb(16, 213, 16);
             font-weight: bold;
+          }
+
+
+          .badge-success {
+            background-color: green;
+            color: white;
+          }
+          
+          .badge-warning {
+            background-color: rgb(215, 180, 3);
+            color: white;
+          }
+          
+          .badge-danger {
+            background-color: red;
+            color: white;
+          }
+          
+          .badge-secondary {
+            background-color: gray;
+            color: white;
           }

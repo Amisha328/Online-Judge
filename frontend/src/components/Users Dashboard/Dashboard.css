@@ -1,3 +1,15 @@
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+.welcome-message h1 {
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+  /* color: #2c3e50; */
+  color: #c52155;
+  text-align: center;
+}
 
     .profile-card {
       display: flex;
@@ -9,10 +21,11 @@
     }
 
     .main-profile {
-      width: 100%;
-      max-width: 600px;
+      width: 50%;
+      max-width: 400px;
       margin: auto;
       padding: 10px;
+      display: flex;
     }
 
     .card-title {
@@ -43,5 +56,27 @@
     h3 {
       font-weight: bold;
       color: #343a40;
+    }
+
+    .problems-solved {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      color: #34495e;
+      font-weight: 600;
+      margin-top: 20px;
+      text-align: center;
+      background-color: #f7f9fb;
+      padding: 10px 20px;
+      border-radius: 10px;
+      box-shadow: 8px 8px 8px 8px rgba(0.1, 0.1, 0.1, 0.1);
+    }
+    
+    .problems-solved span {
+      color: #c52155;
+    }
+    
+    .container-pie-data {
+      max-width: 370px;
+      margin: auto;
     }
         

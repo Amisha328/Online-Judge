@@ -41,7 +41,7 @@
         }
         
         .problem-link:hover {
-          text-decoration: underline;
+          font-weight: bold;
         }
         
         /* Header Styling */
@@ -63,8 +63,10 @@
           padding: 10px 10px;
         }
         .check-mark {
-          margin-left: 10px;
+          margin-left: 15px;
           font-weight: bold;
+          color: rgb(13, 188, 13);
+          font-size: 20px;
         }
 
        

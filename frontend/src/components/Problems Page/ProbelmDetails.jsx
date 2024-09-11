@@ -8,6 +8,7 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
 import './ProbelmDetails.css';
+import CodeDialog from './CodeDialog';
 
 const ProblemDetail = () => {
   const { id } = useParams();
@@ -23,9 +24,13 @@ const ProblemDetail = () => {
   const [activeTab, setActiveTab] = useState('input');
   const [problemTab, setProblemTab] = useState('problem');
   const [verdict, setVerdict] = useState('');
+  const [verdicts, setVerdicts] = useState([]);
   const [userId, setUserID] = useState("");
   const [submissions, setSubmissions] = useState([]);
   const [verdictStatus, setVerdictStatus] = useState('');
+  const [showDialog, setShowDialog] = useState(false);
+  const [selectedCode, setSelectedCode] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('cpp');
   const root = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
@@ -50,6 +55,7 @@ const ProblemDetail = () => {
     const fetchProblem = async () => {
       try {
         const response = await axios.get(`${root}/problems/${id}`);
+        // console.log(response.data);
         setProblem(response.data);
       } catch (error) {
         console.error('Error fetching the problem:', error);
@@ -57,12 +63,6 @@ const ProblemDetail = () => {
     };
 
     const fetchSubmissions = async () => {
-      // try {
-      //   const response = await axios.get(`${root}/problems/submissions/${id}/${userId}`)
-      //   setSubmissions(response.data);
-      // } catch (error) {
-      //   console.error('Error fetching submissions:', error);
-      // }
 
       try {
         let response;
@@ -85,7 +85,7 @@ const ProblemDetail = () => {
 
   useEffect(() => {
     const boilerplateCode = {
-      cpp: `#include <iostream>
+      cpp: `#include <bits/stdc++.h>
 
 int main() { 
   std::cout << "Hello from C++!"; 
@@ -111,6 +111,12 @@ int main() {
   const handleChangeLanguage = (event) => {
     setLanguage(event.target.value);
   };
+  
+  const handleViewClick = (submission) => {
+    setSelectedCode(submission.submissionCode);
+    setSelectedLanguage(submission.language);
+    setShowDialog(true);
+  };
 
   const handleRun = async () => {
     const payload = {
@@ -124,9 +130,11 @@ int main() {
     setActiveTab('output');
     try {
       const { data } = await axios.post(import.meta.env.VITE_CODE_RUN, payload);
+      // console.log(data);
       setOutput(data.output);
     } catch (error) {
-      console.log(error.response);
+      // console.log("Error", error.response);
+      setOutput(`Error: ${error.response.data.error}`);
     } finally {
       setLoading(false);
     }
@@ -140,22 +148,37 @@ int main() {
       problemId: id,
       timeLimit: problem.timeLimit
     };
-    // console.log(`contestId: ${contestId}`)
     if (contestId) {
       payload.contestId = contestId; // Add contestId to payload if it exists
     }
     setLoading(true);
     setOutput("");
     setVerdict("");
+    setVerdicts([]);
     setActiveTab('verdict');
     try {
       const { data } = await axios.post(import.meta.env.VITE_CODE_SUBMIT, payload);
-      setVerdict(data.verdict);
+      setVerdicts(data.verdicts);
+      setVerdict(data.result);
       (data.status == false)? setVerdictStatus('red'): setVerdictStatus('green');
     } catch (error) {
-      console.log(error.response);
+      setActiveTab('output');
+      setOutput(error.response.data.error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getBadgeColor = (difficulty) => {
+    switch (difficulty) {
+      case 'Easy':
+        return 'badge-success';
+      case 'Medium':
+        return 'badge-warning';
+      case 'Hard':
+        return 'badge-danger';
+      default:
+        return 'badge-secondary';
     }
   };
 
@@ -164,6 +187,9 @@ int main() {
       <div className="row">
         <div className="col-md-6">
         <h2><b>{problem && problem.title}</b></h2>
+        <span className={`badge ${getBadgeColor(problem && problem.difficulty)}`}>
+        {problem && problem.difficulty}
+      </span>
           <div className="tab-container">
             <div
               className={`tab ${problemTab === 'problem' ? 'tab-active' : ''}`}
@@ -208,8 +234,8 @@ int main() {
                   ) : (
                     <p>No sample test cases available.</p>
                   )}
-                  <h5><b>Constraints:</b></h5>
-                  <span className="problem-text">{problem.timeLimit / 1000} sec</span>
+                  {/* <h5><b>Maximum TimeLimit:</b></h5> */}
+                  {/* <span className="problem-text">{problem.timeLimit / 1000} sec</span> */}
                 </>
               ) : (
                 <p>Loading...</p>
@@ -227,6 +253,7 @@ int main() {
                       <th>Language</th>
                       <th>Verdict</th>
                       <th>Time</th>
+                      <th>Code</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -235,6 +262,7 @@ int main() {
                         <td>{submission.language}</td>
                         <td>{submission.verdict}</td>
                         <td>{new Date(submission.submissionTime).toLocaleString()}</td>
+                        <td><button className="btn btn-dark" onClick={() => handleViewClick(submission)}>View</button></td>
                       </tr>
                     ))}
                   </tbody>
@@ -304,7 +332,11 @@ int main() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               className="outputbox mt-4 bg-dark text-white p-3 rounded"
-              style={{ height: '200px'}}
+              style={{ 
+                height: '200px',
+                fontSize: 15
+              }}
+              placeholder="Enter your input here..."
             ></textarea>
           )}
           {activeTab === 'output' && (
@@ -317,17 +349,41 @@ int main() {
             </div>
           )}
           {activeTab === 'verdict' && (
-            <div className="outputbox mt-4 bg-dark text-white p-3 rounded" style={{ height: '200px' }}>
-              {loading && <div className="loader mt-4"></div>}
-              <p className = {verdictStatus} style={{
-                fontFamily: '"Fira code", "Fira Mono", monospace',
-                fontSize: 15
-              }}>{verdict}
-              </p>
-            </div>
+          <div className="outputbox mt-4 bg-dark text-white p-3 rounded" style={{ height: '200px', overflowY: 'auto' }}>
+            {loading && <div className="loader mt-4"></div>}
+            <div style={{marginBottom: '5px', fontSize: 20}}>{verdict}</div>
+            {verdicts && verdicts.length > 0 ? (
+              verdicts.map((verdict, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: 'inline-block',
+                    padding: '5px 10px',
+                    marginBottom: '5px',
+                    borderRadius: '5px',
+                    marginLeft: '10px',
+                    backgroundColor: verdict.status ? 'green' : 'red',
+                    fontFamily: '"Fira code", "Fira Mono", monospace',
+                    fontSize: 15,
+                    color: 'white'
+                  }}
+                >
+                  {verdict.verdict}
+                </div>
+              ))
+            ) : (
+              <p>No verdict available.</p>
+            )}
+          </div>
           )}
             </div>
           </div>
+          <CodeDialog
+            show={showDialog}
+            handleClose={() => setShowDialog(false)}
+            code={selectedCode}
+            language={selectedLanguage}
+          />
         </div>
   );
 };

@@ -129,33 +129,6 @@ export default function Login() {
 
         const handleLogin = async (event) => {
           event.preventDefault();
-          // console.log(
-          //   `Email: ${user.email} Password: ${user.password}`
-          // );
-
-          // try {
-          //   const response = await fetch("http://localhost:5000/login", {
-          //     method: "POST",
-          //     headers: {
-          //       "Content-Type": "application/json",
-          //     },
-          //     body: JSON.stringify(user),
-          //   });
-      
-          //   if (!response.ok) {
-          //     const errorData = await response.json();
-          //     throw new Error(errorData.message || "Something went wrong!");
-          //   }
-      
-          //   const data = await response.json();
-          //   console.log(data);
-          //   navigate("/dashboard");
-          // } catch (error) {
-          //   console.log('There was an error logging in the user!', error);
-          //   setMessages({ ...messages, server: error.message });
-          // }
-
-          
           setLoading(true);
         
           try {

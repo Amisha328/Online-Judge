@@ -11,12 +11,12 @@ h1 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
   display: flex;
-  flex-direction: column;
+  flex-direction: end;
   justify-content: space-between;
 }
 
 .problem-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 8px rgba(0, 0.5, 0.5, 0.15);
 }
 
 .problem-card h3 {
@@ -26,7 +26,6 @@ h1 {
 
 .btn-container {
   margin-top: auto; 
-  
 }
 
 .btn-primary {

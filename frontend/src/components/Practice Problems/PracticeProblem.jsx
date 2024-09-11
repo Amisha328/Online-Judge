@@ -4,6 +4,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './PracticeProblem.css';
 import NavBar from '../NavBar/NavBar';
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
 const PracticeProblem = () => {
   let navigate = useNavigate();
@@ -16,6 +17,9 @@ const PracticeProblem = () => {
   const [userId, setUserId] = useState('');
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [currFilterPage, setCurrFilterPage] = useState(1);
+  const [filterActive, setFilterActive] = useState(false);
+  const [totalPages, setTotalPages] = useState(0);
   const problemsPerPage = 10;
 
   useEffect(() => {
@@ -37,26 +41,55 @@ const PracticeProblem = () => {
     verifyCookie();
   }, [navigate, root]);
 
-  useEffect(() => {
-    const fetchProblems = async () => {
-      try {
-        if (userId) {
-          const response = await axios.get(`${root}/problems`, {
-            params: { userId },
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          });
-          setProblems(response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching the problems:', error);
-      }
-    };
 
-    fetchProblems();
-  }, [root, userId]);
+const fetchFilteredProblems = async () => {
+  try {
+    const { data } = await axios.get(`${root}/filtered-problems`, {
+      params: {
+        difficulty: difficultyFilter,
+        tag: tagFilter,
+        search: searchKeyword,
+        userId,
+        page: currFilterPage,
+        limit: 10
+      }
+    });
+    setProblems(data.problems);
+    setTotalPages(data.totalPages);
+    setFilterActive(true);
+  } catch (error) {
+    console.error('Error fetching filtered problems', error);
+  }
+};
+
+// Effect to fetch problems when filters change
+useEffect(() => {
+  setCurrFilterPage(1);
+  fetchFilteredProblems(); // Always reset to page 1 when filters change
+}, [difficultyFilter, tagFilter, searchKeyword]);
+
+useEffect(() => {
+  fetchFilteredProblems(); // Always reset to page 1 when filters change
+}, [currFilterPage]);
+
+useEffect(() => {
+  const fetchProblems = async () => {
+    try {
+     if(userId){
+        const { data } = await axios.get(`${root}/problem-pagination`, {
+          params: { page: currentPage, limit: problemsPerPage, userId }, // Send page and limit in the request
+        });
+        setProblems(data.data); // Set the problems for the current page
+        setTotalPages(data.totalPages); // Set total number of pages from the backend response
+      }
+    } catch (error) {
+      console.error('Error fetching paginated problems', error);
+    }
+  };
+
+    fetchProblems(); // Call the function to fetch problems when component mounts or currentPage changes
+  }, [currentPage, root, userId]); // Effect will re-run whenever currentPage changes
+
 
   const handleDelete = async (id) => {
     try {
@@ -75,20 +108,20 @@ const PracticeProblem = () => {
     navigate("/problems/create");
   };
 
-  const filteredProblems = problems.filter(problem => {
-    const matchesDifficulty = difficultyFilter ? problem.difficulty === difficultyFilter : true;
-    const matchesTag = tagFilter ? problem.tags.includes(tagFilter) : true;
-    const matchesSearch = searchKeyword
-      ? problem.title.toLowerCase().includes(searchKeyword.toLowerCase())
-      : true;
-    return matchesDifficulty && matchesTag && matchesSearch;
-  });
+  // const filteredProblems = problems.filter(problem => {
+  //   const matchesDifficulty = difficultyFilter ? problem.difficulty === difficultyFilter : true;
+  //   const matchesTag = tagFilter ? problem.tags.includes(tagFilter) : true;
+  //   const matchesSearch = searchKeyword
+  //     ? problem.title.toLowerCase().includes(searchKeyword.toLowerCase())
+  //     : true;
+  //   return matchesDifficulty && matchesTag && matchesSearch;
+  // });
 
-  // Calculate pagination
-  const indexOfLastProblem = currentPage * problemsPerPage;
-  const indexOfFirstProblem = indexOfLastProblem - problemsPerPage;
-  const currentProblems = filteredProblems.slice(indexOfFirstProblem, indexOfLastProblem);
-  const totalPages = Math.ceil(filteredProblems.length / problemsPerPage);
+  // Calculate pagination - Uisng JS
+  // const indexOfLastProblem = currentPage * problemsPerPage;
+  // const indexOfFirstProblem = indexOfLastProblem - problemsPerPage;
+  // const currentProblems = filteredProblems.slice(indexOfFirstProblem, indexOfLastProblem);
+  // const totalPages = Math.ceil(filteredProblems.length / problemsPerPage);
 
   return (
     <>
@@ -117,17 +150,21 @@ const PracticeProblem = () => {
               value={tagFilter}
               onChange={(e) => setTagFilter(e.target.value)}
             >
-              <option value="">All Tags</option>
+               <option value="">All Tags</option>
               <option value="Array">Array</option>
               <option value="Trees">Trees</option>
               <option value="String">String</option>
               <option value="Graph">Graph</option>
-              <option value="DP">DP</option>
+              <option value="Bit Masking">Bit Masking</option>
               <option value="Hashing">Hashing</option>
+              <option value="Stack">Stack</option>
               <option value="Linked List">Linked List</option>
               <option value="Math">Math</option>
               <option value="Sliding Window">Sliding Window</option>
               <option value="Binary Search">Binary Search</option>
+              <option value="Dynamic Programming">Dynamic Programming</option>
+              <option value="Matrix">Matrix</option>
+              <option value="Two Pointers">Two Pointers</option>
             </select>
           </div>
           <div className="input-group search-box">
@@ -144,6 +181,7 @@ const PracticeProblem = () => {
         <table className="table table-hover">
           <thead>
             <tr>
+              <th>Status</th>
               <th>Name</th>
               <th>Difficulty</th>
               <th>Tags</th>
@@ -153,13 +191,13 @@ const PracticeProblem = () => {
             </tr>
           </thead>
           <tbody>
-            {currentProblems.map(problem => (
+            { problems && problems.map(problem => (
               <tr key={problem._id} className="problem-row">
+              <td>{problem.accepted && <span className="check-mark"><IoMdCheckmarkCircleOutline /></span>}</td>
               <td>
                 <Link to={`/problems/${problem._id}`} className="problem-link">
                   {problem.title}
                 </Link>
-                {problem.accepted && <span className="check-mark">✅</span>}
                 </td>
                 <td>{problem.difficulty}</td>
                 <td>{problem.tags.split(',').map(tag => tag.trim()).join(', ')}</td>
@@ -173,23 +211,44 @@ const PracticeProblem = () => {
             ))}
           </tbody>
         </table>
-        <div className="d-flex justify-content-between">
+        {
+          filterActive ?
+          <div className="d-flex justify-content-between">
           <button
             className="btn btn-secondary"
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
+            onClick={() => setCurrFilterPage(prev => Math.max(prev - 1, 1))}
+            disabled={currFilterPage === 1}
           >
             Previous
           </button>
-          <div>Page {currentPage} of {totalPages}</div>
+          <div>Page {currFilterPage} of {totalPages}</div>
           <button
             className="btn btn-secondary"
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
+            onClick={() => setCurrFilterPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currFilterPage === totalPages}
           >
             Next
           </button>
         </div>
+        :
+            <div className="d-flex justify-content-between">
+            <button
+              className="btn btn-secondary"
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <div>Page {currentPage} of {totalPages}</div>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        }
       </div>
     </>
   );

@@ -98,7 +98,7 @@ export default function CreateProblem() {
               </div>
               <div className="mb-3">
                 <label className="form-label">Description</label>
-                <textarea className="form-control" name="description" value={currentProblem.description} onChange={handleFormChange} required />
+                <textarea className="form-control" style = {{ height: "200px"}} name="description" value={currentProblem.description} onChange={handleFormChange} required />
               </div>
                <div className="mb-3">
                 <label className="form-label">Time Limit (ms)</label>
@@ -117,9 +117,9 @@ export default function CreateProblem() {
                   </div>
                   <div className="mb-3">
                     <label className="form-label">Explanation</label>
-                    <textarea className="form-control" name="explanation" value={testCase.explanation} onChange={(e) => handleSampleTestCaseChange(index, e)} />
+                    <textarea className="form-control" style = {{ height: "100px"}} name="explanation" value={testCase.explanation} onChange={(e) => handleSampleTestCaseChange(index, e)} />
                   </div>
-                  <button type="button" className="btn btn-danger btn-sm" onClick={() => handleRemoveSampleTestCase(index)}>Remove Test Case</button>
+                  <button type="button" className="btn btn-danger" onClick={() => handleRemoveSampleTestCase(index)}>Remove Test Case</button>
                   <button type="button" className="btn btn-primary mx-3 btn-sm" onClick={handleAddSampleTestCase}>Add Test Case</button>
                 </div>
               ))}
@@ -135,7 +135,7 @@ export default function CreateProblem() {
                     <label className="form-label">Expected Output</label>
                     <textarea className="form-control" name="expectedOutput" value={testCase.expectedOutput} onChange={(e) => handleHiddenTestCaseChange(index, e)} required />
                   </div>
-                  <button type="button" className="btn btn-danger btn-sm" onClick={() => handleRemoveHiddenTestCase(index)}>Remove Test Case</button>
+                  <button type="button" className="btn btn-danger" onClick={() => handleRemoveHiddenTestCase(index)}>Remove Test Case</button>
                   <button type="button" className="btn btn-primary mx-3 btn-sm" onClick={handleAddHiddenTestCase}>Add Test Case</button>
                 </div>
                 ))}

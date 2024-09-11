@@ -13,6 +13,7 @@ import CompetitionPage from './components/Contest Page/CompetitionPage';
 import ContestProblemsPage from './components/Contest Page/ContestProblemsPage';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import HostContest from './components/Contest Page/HostContest';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -22,21 +23,84 @@ function App() {
           <Route path='/' element={<Home/>}></Route>
           <Route path='/signup' element={<SignUp/>}></Route>
           <Route path='/login' element={<Login/>}></Route>
-          <Route path='/dashboard' element={<Dashboard/>}></Route>
           <Route path='/forgot-password' element={<ForgotPassword/>}></Route>
           <Route path="/reset-password/:id/:token" element={<ResetPassword/>}></Route>
-          <Route path="/problems" element={<PracticeProblem/>}></Route>
-          <Route path="/problems/create" element={<CreateProblem />} />
-          <Route path="/problems/edit/:id" element={<UpdateProblem />} />
-          <Route path="/problems/:id" element={<ProblemDetail />} />
-          <Route path="/compete" element={<CompetitionPage/>}/>
-          <Route path="/competitions/:contestId/problems" element={<ContestProblemsPage/>} />
-          <Route path="/competitions/:contestId/problems/:id" element={<ProblemDetail/>} />
-          <Route path="/host-contest" element={<HostContest/>}/>
+
+          <Route 
+          path='/dashboard' 
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } 
+          />
+          <Route 
+            path="/problems" 
+            element={
+              <ProtectedRoute>
+                <PracticeProblem />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/problems/create" 
+            element={
+              <ProtectedRoute adminRoute={true}>
+                <CreateProblem />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/problems/edit/:id" 
+            element={
+              <ProtectedRoute adminRoute={true}>
+                <UpdateProblem />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/problems/:id" 
+            element={
+              <ProtectedRoute>
+                <ProblemDetail />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/compete" 
+            element={
+              <ProtectedRoute>
+                <CompetitionPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/competitions/:contestId/problems" 
+            element={
+              <ProtectedRoute>
+                <ContestProblemsPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/competitions/:contestId/problems/:id" 
+            element={
+              <ProtectedRoute>
+                <ProblemDetail />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/host-contest" 
+            element={
+              <ProtectedRoute adminRoute={true}>
+                <HostContest />
+              </ProtectedRoute>
+            } 
+          />
         </Routes>
     </BrowserRouter>
    </>
   );
 }
-
 export default App;

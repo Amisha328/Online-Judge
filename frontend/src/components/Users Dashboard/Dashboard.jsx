@@ -6,6 +6,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './Dashboard.css';
 import NavBar from '../NavBar/NavBar';
+import { Pie } from 'react-chartjs-2';
+import 'chart.js/auto';
+import { FaEdit } from "react-icons/fa";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -14,9 +17,14 @@ export default function Dashboard() {
   const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState(null);
-  const [problemsSolved, setProblemsSolved] = useState([]);
+  const [practiceProblemsSolved, setPracticeProblemsSolved] = useState(0);
+  const [contestProblemsSolved, setContestProblemsSolved] = useState([]);
+  const [totalProblems, setTotalProblems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const problemsPerPage = 5;
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedEmail, setEditedEmail] = useState("");
+  const [editedPhoneNo, setEditedPhoneNo] = useState("");
   const root = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
@@ -51,41 +59,153 @@ export default function Dashboard() {
         try {
           const response = await axios.get(`${root}/${userId}/profile`);
           setUser(response.data.user);
-          setProblemsSolved(response.data.problemsSolved);
+          // console.log(user);
+          setEditedEmail(response.data.user.email); // Set initial values
+          setEditedPhoneNo(response.data.user.phoneNo); // Set initial values
+          setPracticeProblemsSolved(response.data.countProblemsSolved);
+          setContestProblemsSolved(response.data.competitionProblemsSolved);
         } catch (error) {
           console.error('Error fetching user profile:', error);
         }
       }
     };
 
+    const fetchTotalProblems = async () => {
+      try {
+        const response = await axios.get(`${root}/problems-count`);
+        setTotalProblems(response.data.count);
+      } catch (error) {
+        console.error('Error fetching total problems count:', error);
+      }
+    };
+
     fetchUserProfile();
+    fetchTotalProblems();
   }, [userId, root]);
 
-  // Calculate pagination
+  const handleSave = async () => {
+    
+    try {
+      const response = await axios.patch(`${root}/${userId}/update-profile`, {
+        email: editedEmail,
+        phoneNo: editedPhoneNo
+      });
+      console.log(response);
+
+      if (response.data.status) {
+        // Update the user state with the new data
+        setUser((prevUser) => ({
+          ...prevUser,
+          email: editedEmail,
+          phoneNo: editedPhoneNo,
+        }));
+      }
+  
+      setIsEditing(false);
+      toast('Profile updated successfully!', { type: 'success', position: 'top-right' });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast('Failed to update profile.', { type: 'error', position: 'top-right' });
+    }
+  };
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
+    setEditedEmail(user.email); // Reset to original values
+    setEditedPhoneNo(user.phoneNo); // Reset to original values
+  };
+
+  // Calculate pagination for contest problems
   const indexOfLastProblem = currentPage * problemsPerPage;
   const indexOfFirstProblem = indexOfLastProblem - problemsPerPage;
-  const currentProblemsSolved = problemsSolved.slice(indexOfFirstProblem, indexOfLastProblem);
-  const totalPages = Math.ceil(problemsSolved.length / problemsPerPage);
+  const currentContestProblemsSolved = contestProblemsSolved.slice(indexOfFirstProblem, indexOfLastProblem);
+  const totalPages = Math.ceil(contestProblemsSolved.length / problemsPerPage);
+
+  // Data for the pie chart
+  const pieData = {
+    labels: ['Practice Problems Solved', 'Unsolved Problems'],
+    datasets: [
+      {
+        data: [practiceProblemsSolved, totalProblems - practiceProblemsSolved],
+        backgroundColor: ['#36A2EB', '#FF6384'],
+        hoverBackgroundColor: ['#36A2EB', '#FF6384'],
+      },
+    ],
+  };
 
   return (
     <>
-      <NavBar/>
+      <NavBar />
+      <div className="container dashboard-container">
+        <div className="welcome-message">
+          <h1>Happy to see you, {name} :D</h1>
+        </div>
+        </div>
       <div className="container mt-5 d-flex flex-column align-items-center">
         {user ? (
           <div className="card main-profile mb-5">
-            <h2 className="text-center">User Profile</h2>
+            <h2 className="text-center mt-3">User Profile</h2>
             <div className="card-body profile-card">
               <h5 className="card-title">{user.name}</h5>
-              <p className="card-text">Email: {user.email}</p>
-              <p className="card-text">Phone: {user.phoneNo}</p>
+              <p className="card-text">
+                <b>Email:</b> {isEditing ? (
+                  <input
+                    type="email"
+                    value={editedEmail}
+                    onChange={(e) => setEditedEmail(e.target.value)}
+                  />
+                ) : (
+                  user.email
+                )}
+                <button onClick={handleEditClick} className="btn btn-lg"
+                style={{color:"#c52155"}}> 
+                  {isEditing ? '' : <FaEdit />}
+                </button>
+              </p>
+              <p className="card-text">
+                <b>Phone:</b> {isEditing ? (
+                  <input
+                    type="text"
+                    value={editedPhoneNo}
+                    onChange={(e) => setEditedPhoneNo(e.target.value)}
+                  />
+                ) : (
+                  user.phoneNo
+                )}
+                <button onClick={handleEditClick} className="btn btn-lg"
+                 style={{color:"#c52155"}}>
+                  {isEditing ? '' : <FaEdit />}
+                </button>
+              </p>
+              {isEditing && (
+                <div>
+                  <button onClick={handleSave} className="btn btn-success mt-2 me-2">Save</button>
+                  <button onClick={handleCancelClick} className="btn btn-secondary mt-2">Cancel</button>
+                </div>
+              )}
             </div>
           </div>
         ) : (
           <div>Loading...</div>
         )}
+
+        <div className="mb-5">
+          <h2 className="text-center"><b>Practice Problems Solved</b></h2>
+          <div className="container-pie-data">
+            <Pie data={pieData} />
+          </div>
+          <div className="problems-solved">
+            <span>{practiceProblemsSolved}</span> / <span>{totalProblems}</span> Problems Solved
+          </div>
+        </div>
+
         <h2 className="text-center mb-3"><b>Contest Problems Solved</b></h2>
-        {problemsSolved.length === 0 ? (
-          <div>No problems solved yet.</div>
+        {contestProblemsSolved.length === 0 ? (
+          <div>No contest problems solved yet.</div>
         ) : (
           <>
             <table className="table table-striped thead-wrapper mt-3">
@@ -98,7 +218,7 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {currentProblemsSolved.map((problem, index) => (
+                {currentContestProblemsSolved.map((problem, index) => (
                   <tr key={index}>
                     <td>{problem.problemDetails.title}</td>
                     <td>{problem.problemDetails.difficulty}</td>
