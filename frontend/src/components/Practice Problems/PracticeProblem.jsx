@@ -79,6 +79,7 @@ useEffect(() => {
         const { data } = await axios.get(`${root}/problem-pagination`, {
           params: { page: currentPage, limit: problemsPerPage, userId }, // Send page and limit in the request
         });
+        console.log(data.data);
         setProblems(data.data); // Set the problems for the current page
         setTotalPages(data.totalPages); // Set total number of pages from the backend response
       }
@@ -86,9 +87,10 @@ useEffect(() => {
       console.error('Error fetching paginated problems', error);
     }
   };
-
+  if (userId) {
     fetchProblems(); // Call the function to fetch problems when component mounts or currentPage changes
-  }, [currentPage, root, userId]); // Effect will re-run whenever currentPage changes
+  }
+}, [currentPage, userId]); // Effect will re-run whenever currentPage changes
 
 
   const handleDelete = async (id) => {
@@ -193,7 +195,8 @@ useEffect(() => {
           <tbody>
             { problems && problems.map(problem => (
               <tr key={problem._id} className="problem-row">
-              <td>{problem.accepted && <span className="check-mark"><IoMdCheckmarkCircleOutline /></span>}</td>
+              <td>{problem.accepted && <span className="check-mark"><IoMdCheckmarkCircleOutline/></span>}</td>
+              {/* <td>{problem.accepted ? <span className="check-mark">YES</span> : <span>No</span>}</td> */}
               <td>
                 <Link to={`/problems/${problem._id}`} className="problem-link">
                   {problem.title}
