@@ -162,7 +162,7 @@ exports.getFilteredProblems = async(req, res) => {
       return { ...problem.toObject(), accepted };
     }); 
 
-    console.log("Final problem count: ",problemsWithStatus.length);
+    // console.log("Final problem count: ",problemsWithStatus.length);
 
     res.status(200).json({
       problems: problemsWithStatus,
