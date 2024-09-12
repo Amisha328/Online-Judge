@@ -11,7 +11,7 @@ WORKDIR /app
 RUN apk update && apk add --no-cache \
 g++ \
 gcc \
-openjdk11-jdk \
+openjdk11 \
 python3 \
 python3-dev \
 py3-pip \

@@ -15,8 +15,6 @@ exports.executeCode = async (req, res) => {
     const filePath = await generateFile(language, code);
     const inputPath = await generateInputFile(input);
     const output = await executeFile(language, filePath, inputPath, timeLimit);
-    // console.log("OUTPUT");
-    // console.log(output);
     res.json({ filePath, inputPath, output });
   } catch (error) {
     res.status(500).json({ success: false, error: error });
@@ -40,57 +38,65 @@ exports.submitCode = async (req, res) => {
     const jobId = path.basename(filePath).split('.')[0];
     const outputPath = path.join(__dirname, 'outputs', `${jobId}.${getOutputExtension(language)}`);
 
+
     try {
-      const output = await executeFile(language, filePath, inputPath, timeLimit);
-      if (output.trim() !== expectedOutput.trim()) {
-        saveSubmission(problem, userId, 'Wrong Answer on Test Case 1', language, code, contestId);
-        return res.json({
-          verdict: 'Wrong Answer on Test Case 1',
-          status: false,
-          input,
-          expectedOutput,
-          output,
-        });
-      }
+      // Perform compilation only (don't run yet)
+      await executeFile(language, filePath, inputPath, timeLimit);
+
     } catch (error) {
-      saveSubmission(problem, userId, 'Runtime Error', language, code, contestId);
-      return res.json({
-        verdict: error.message,
-        status: false,
-        error: error.message,
-      });
+      saveSubmission(problem, userId, error.type, language, code, contestId);
+      return res.status(400).json({ success: false, error: `Error: ${error.type}: ${error.message}` });
     }
 
-    for (let i = 1; i < hiddenTestCases.length; i++) {
+    let verdicts = [];
+    let result = "Accepted";
+  
+    for (let i = 0; i < hiddenTestCases.length; i++) {
       const { input, expectedOutput } = hiddenTestCases[i];
       await fs.writeFileSync(inputPath, input);
 
       try {
-        const output = await executeCompiledFile(language, filePath, outputPath, inputPath, timeLimit);
-        if (output.trim() !== expectedOutput.trim()) {
-          saveSubmission(problem, userId, `Wrong Answer on Test Case ${i + 1}`, language, code, contestId);
-          return res.json({
-            verdict: `Wrong Answer on Test Case ${i + 1}`,
-            status: false,
+        const output = i === 0
+          ? await executeFile(language, filePath, inputPath, timeLimit)
+          : await executeCompiledFile(language, filePath, outputPath, inputPath, timeLimit);
+          
+          const status = output.trim() === expectedOutput.trim();
+
+          verdicts.push({
+            verdict: status ? `TC ${i + 1}: Accepted` : `TC ${i + 1}: Wrong Answer`,
+            status,
             input,
             expectedOutput,
             output,
           });
+  
+          // If output is incorrect, stop further execution
+          if (!status) {
+            result = "Wrong Answer";
+            break;
+          }
+  
+        } catch (error) {
+          result = "Runtime Error";
+          verdicts.push({
+            verdict: `TC ${i + 1}: Runtime Error`,
+            status: false,
+            input,
+            expectedOutput,
+            output: error.message,
+          });
+          break; // Stop further execution on runtime error
         }
-      } catch (error) {
-        saveSubmission(problem, userId, `Runtime Error on Test Case ${i + 1}`, language, code, contestId);
-        return res.json({
-          verdict: `Runtime Error on Test Case ${i + 1}`,
-          status: false,
-          error: error.message,
-        });
       }
-    }
-
-    saveSubmission(problem, userId, 'Accepted', language, code, contestId);
+  
+      const allPassed = verdicts.every(verdict => verdict.status);
+      if (allPassed) result = "Accepted";
+  
+    await saveSubmission(problem, userId, result , language, code, contestId);
     return res.json({
-      status: true,
-      verdict: 'Accepted',
+      status: allPassed,
+      verdicts,
+      result,
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -136,6 +142,21 @@ const saveSubmission = async (problem, userId, verdict, language, code, contestI
 };
 
 const getOutputExtension = (language) => {
+
+  switch (language) {
+    case 'cpp':
+      return 'out';
+    case 'c':
+      return 'out';
+    case 'java':
+      return 'class';
+    case 'py':
+      return 'py';
+    default:
+      throw new Error('Unsupported language');
+  }
+
+  /*
   switch (language) {
     case 'cpp':
       return 'exe';
@@ -148,4 +169,5 @@ const getOutputExtension = (language) => {
     default:
       throw new Error('Unsupported language');
   }
+  */
 };

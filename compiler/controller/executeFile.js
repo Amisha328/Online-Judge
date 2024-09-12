@@ -12,20 +12,33 @@ const executeFile = (language, filePath, inputPath, timeLimt) => {
   const jobId = path.basename(filePath).split(".")[0];
   const outputFilename = `${jobId}.${getOutputExtension(language)}`;
   const outPath = path.join(outputPath, outputFilename);
-  // console.log(path.basename(outPath));
 
   return new Promise((resolve, reject) => {
     exec(getCompileCommand(language, filePath, outPath, inputPath), (error, stdout, stderr) => {
       if (error) {
-        reject(new Error(`Compilation Error: ${error}`));
+        reject({
+          type: 'Compilation Error',
+          message: error.message,
+          code: error.code, 
+        });
       } else if (stderr) {
-        reject(new Error(`Runtime Error: ${stderr}`));
+        reject({
+          type: 'Runtime Error',
+          message: stderr, // Runtime error message
+        });
       } else {
         const runProcess = exec(getRunCommand(language, filePath, outPath, inputPath), (error, stdout, stderr) => {
           if (error) {
-            reject(new Error(`Compilation Error: ${error}`));
+            reject({
+              type: 'Compilation Error',
+              message: error.message,
+              code: error.code, 
+            });
           } else if (stderr) {
-            reject(new Error(`Runtime Error: ${stderr}`));
+            reject({
+              type: 'Runtime Error',
+              message: stderr, // Runtime error message
+            });
           } else {
             resolve(stdout);
           }
@@ -34,12 +47,11 @@ const executeFile = (language, filePath, inputPath, timeLimt) => {
         // Enforce the time limit
         const timer = setTimeout(() => {
           runProcess.kill('SIGKILL');
-          reject(new Error('Time Limit Exceeded'));
+          reject({
+            type: 'Time Limit Exceeded',
+            message: 'The process exceeded the allowed time limit.',
+          });
         }, timeLimt);
-
-        // runProcess.on('exit', (code) => {
-        //   clearTimeout(timer);
-        // });
       }
     });
   });
@@ -49,9 +61,15 @@ const executeCompiledFile = (language, filePath, outPath, inputPath, timeLimt) =
   return new Promise((resolve, reject) => {
     const runProcess = exec(getRunCommand(language, filePath, outPath, inputPath), (error, stdout, stderr) => {
       if (error) {
-        reject(new Error(`Runtime Error: ${stderr || error.message}`));
+        reject({
+          type: 'Runtime Error',
+          message: stderr, // Runtime error message
+        });
       } else if (stderr) {
-        reject(new Error(`Runtime Error: ${stderr}`));
+        reject({
+          type: 'Runtime Error',
+          message: stderr, // Runtime error message
+        });
       } else {
         resolve(stdout);
       }
@@ -60,17 +78,19 @@ const executeCompiledFile = (language, filePath, outPath, inputPath, timeLimt) =
      // Enforce the time limit
      const timer = setTimeout(() => {
       runProcess.kill('SIGKILL');
-      reject(new Error('Time Limit Exceeded'));
+      reject({
+        type: 'Time Limit Exceeded',
+        message: 'The process exceeded the allowed time limit.',
+      });
     }, timeLimt);
-
-    // runProcess.on('exit', (code) => {
-    //   clearTimeout(timer);
-    // });
 
   });
 };
 
 const getOutputExtension = (language) => {
+  /*
+
+  // For Windows
   switch (language) {
     case "cpp":
       return "exe";
@@ -83,6 +103,23 @@ const getOutputExtension = (language) => {
     default:
       throw new Error("Unsupported language");
   }
+  */
+
+  // For Linux
+
+  switch (language) {
+    case 'cpp':
+      return 'out';
+    case 'c':
+      return 'out';
+    case 'java':
+      return 'class';
+    case 'py':
+      return 'py';
+    default:
+      throw new Error('Unsupported language');
+  }
+
 };
 
 const getCompileCommand = (language, filePath, outPath, inputPath) => {
@@ -101,11 +138,26 @@ const getCompileCommand = (language, filePath, outPath, inputPath) => {
 };
 
 const getRunCommand = (language, filePath, outPath, inputPath) => {
+  /*
   switch (language) {
     case "cpp":
       return `cd ${outputPath} && .\\${path.basename(outPath)} < ${inputPath}`;
     case "c":
       return `cd ${outputPath} && .\\${path.basename(outPath)} < ${inputPath}`;
+    case "java":
+      return `java ${filePath} < ${inputPath}`;
+    case "py":
+      return `python ${filePath} < ${inputPath}`;
+    default:
+      throw new Error("Unsupported language");
+  }
+  */
+
+  switch (language) {
+    case "cpp":
+      return `cd ${outputPath} && ./${path.basename(outPath)} < ${inputPath}`;
+    case "c":
+      return `cd ${outputPath} && ./${path.basename(outPath)} < ${inputPath}`;
     case "java":
       return `java ${filePath} < ${inputPath}`;
     case "py":
