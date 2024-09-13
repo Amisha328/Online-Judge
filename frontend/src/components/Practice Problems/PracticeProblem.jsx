@@ -20,6 +20,7 @@ const PracticeProblem = () => {
   const [currFilterPage, setCurrFilterPage] = useState(1);
   const [filterActive, setFilterActive] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(true);
   const problemsPerPage = 10;
 
   useEffect(() => {
@@ -59,7 +60,7 @@ const fetchFilteredProblems = async () => {
     setFilterActive(true);
   } catch (error) {
     console.error('Error fetching filtered problems', error);
-  }
+  } 
 };
 
 // Effect to fetch problems when filters change
@@ -73,6 +74,7 @@ useEffect(() => {
 }, [currFilterPage]);
 
 useEffect(() => {
+  setLoading(true);
   const fetchProblems = async () => {
     try {
      if(userId){
@@ -85,6 +87,8 @@ useEffect(() => {
       }
     } catch (error) {
       console.error('Error fetching paginated problems', error);
+    } finally {
+      setLoading(false);
     }
   };
   if (userId) {
@@ -180,6 +184,9 @@ useEffect(() => {
             <span className="input-group-text search">🔍</span>
           </div>
         </div>
+        { loading ? ( 
+          <div>Loading...</div>
+        ) : (
         <table className="table table-hover">
           <thead>
             <tr>
@@ -214,6 +221,7 @@ useEffect(() => {
             ))}
           </tbody>
         </table>
+        )}
         {
           filterActive ?
           <div className="d-flex justify-content-between">
