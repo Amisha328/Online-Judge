@@ -81,7 +81,7 @@ useEffect(() => {
         const { data } = await axios.get(`${root}/problem-pagination`, {
           params: { page: currentPage, limit: problemsPerPage, userId }, // Send page and limit in the request
         });
-        console.log(data.data);
+        // console.log(data.data);
         setProblems(data.data); // Set the problems for the current page
         setTotalPages(data.totalPages); // Set total number of pages from the backend response
       }
