@@ -44,15 +44,18 @@ exports.getUserProfile = async (req, res) => {
     });
 
 
-    let countProblemsSolved = 0;
+   
+    let countProblemsSolved = practiceProblems.length;
 
+    /*
     for (const practice of practiceProblems) {
       for(const submission of practice.submissions){
         if (submission.userId.toString() === req.params.userId && submission.verdict === 'Accepted') 
           countProblemsSolved++;
       }
     }
-
+    console.log("Total problems solved: ", countProblemsSolved);
+    */
 
     res.status(200).json({ user, competitionProblemsSolved, countProblemsSolved });
   } catch (error) {
