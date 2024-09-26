@@ -60,8 +60,8 @@ export default function Dashboard() {
           const response = await axios.get(`${root}/${userId}/profile`);
           setUser(response.data.user);
           // console.log(user);
-          setEditedEmail(response.data.user.email); // Set initial values
-          setEditedPhoneNo(response.data.user.phoneNo); // Set initial values
+          setEditedEmail(response.data.user.email); 
+          setEditedPhoneNo(response.data.user.phoneNo); 
           setPracticeProblemsSolved(response.data.countProblemsSolved);
           setContestProblemsSolved(response.data.competitionProblemsSolved);
         } catch (error) {

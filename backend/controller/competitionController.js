@@ -75,12 +75,37 @@ exports.getProblems = async(req, res) => {
   }
 }
 
+exports.cancelContest = async (req, res) => {
+  const { contestId } = req.params;
+
+  try {
+    const competition = await Competition.findById(contestId);
+
+    if (!competition) {
+      return res.status(404).json({ error: 'Contest not found' });
+    }
+
+    // Ensure that only upcoming contests can be canceled
+    if (new Date(competition.start_date_time) <= new Date()) {
+      return res.status(400).json({ error: 'Only upcoming contests can be canceled' });
+    }
+
+    // Delete the contest
+    await Competition.findByIdAndDelete(contestId);
+
+    res.status(200).json({ message: 'Contest canceled successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error', error });
+  }
+};
+
+
 const updateLeaderboard = async (contestId) => {
   try {
     const competition = await Competition.findById(contestId);
-    console.log("Inside Update Leaderboard");
+    // console.log("Inside Update Leaderboard");
     if (!competition) {
-      console.error('Competition not found');
+      // console.error('Competition not found');
       return;
     }
 

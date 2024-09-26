@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './CompetitionPage.css';
 import NavBar from '../NavBar/NavBar';
+import { ToastContainer, toast } from "react-toastify";
 
 const CompetitionPage = () => {
   let navigate = useNavigate();
@@ -56,6 +57,24 @@ const CompetitionPage = () => {
     navigate("/host-contest");
   }
 
+  const handleCancelContest = async (contestId) => {
+    if (!window.confirm("Are you sure you want to cancel this contest?")) return;
+  
+    try {
+      await axios.delete(`${root}/cancel-contest/${contestId}`, {
+        withCredentials: true,
+      });
+      toast("Contest canceled successfully", { position: "top-right" });
+  
+      // Refresh the upcoming contests list
+      const updatedContests = upcomingContests.filter(contest => contest._id !== contestId);
+      setUpcomingContests(updatedContests);
+    } catch (error) {
+      toast("Failed to cancel contest", { position: "top-right" });
+      console.error('Error canceling contest:', error);
+    }
+  };  
+
   return (
     <>
     <NavBar/>
@@ -75,7 +94,7 @@ const CompetitionPage = () => {
             <div key={contest._id} className="contest-card">
               <h3>{contest.title}</h3>
               <p>{new Date(contest.start_date_time).toLocaleString()} - {new Date(contest.end_date_time).toLocaleString()}</p>
-              <button onClick={() => handleCompeteClick(contest)}>Let's Compete</button>
+              <button className = "btn btn-success btn-sm" onClick={() => handleCompeteClick(contest)}>Let's Compete</button>
             </div>
           ))
         )}
@@ -89,7 +108,10 @@ const CompetitionPage = () => {
             <div key={contest._id} className="contest-card">
               <h3>{contest.title}</h3>
               <p>{new Date(contest.start_date_time).toLocaleString()} - {new Date(contest.end_date_time).toLocaleString()}</p>
-              <button disabled>Not Started</button>
+              <button className = "btn-sm me-2" disabled>Not Started</button>
+              {isAdmin && (
+                <button className="btn btn-danger btn-sm" onClick={() => handleCancelContest(contest._id)}>Cancel Contest</button>
+              )}
             </div>
           ))
         )}
@@ -103,12 +125,13 @@ const CompetitionPage = () => {
             <div key={contest._id} className="contest-card">
               <h3>{contest.title}</h3>
               <p>{new Date(contest.start_date_time).toLocaleString()} - {new Date(contest.end_date_time).toLocaleString()}</p>
-              <button onClick={() => handleCompeteClick(contest)}>View</button>
+              <button className = "btn btn-success btn-sm" onClick={() => handleCompeteClick(contest)}>View</button>
             </div>
           ))
         )}
       </div>
     </div>
+    <ToastContainer />
     </>
   );
 };

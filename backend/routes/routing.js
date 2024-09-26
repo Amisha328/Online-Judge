@@ -13,7 +13,7 @@ routing.post('/verify-token', userVerification);
 routing.post('/logout', logout);
 routing.post('/request-password-reset', controller.requestPasswordReset);
 routing.post('/reset-password/:id/:token', controller.resetPassword);
-// routing.get('/problems', problemController.getAllProblems);
+routing.get('/problems', problemController.getAllProblems);
 routing.get('/filtered-problems', problemController.getFilteredProblems);
 routing.get('/problems/:id', problemController.getProblem);
 routing.get('/problems/submissions/:id/:userId', problemController.getSubmissions);
@@ -31,6 +31,7 @@ routing.get('/:userId/profile', userController.getUserProfile);
 routing.get('/problems-count', problemController.getTotalProblemsCount);
 routing.patch('/:userId/update-profile', userController.updateUser);
 routing.get('/problem-pagination', problemController.getProblemChuncks);
+routing.delete('/cancel-contest/:contestId', contestController.cancelContest);
 routing.all('*', controller.invalid);
 
 module.exports = routing;

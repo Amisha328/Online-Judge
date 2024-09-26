@@ -37,6 +37,8 @@ const HostContest = () => {
             const response = await axios.post(`${root}/create-contest`, payload);
             // console.log('Competition created:', response.data);
             toast(`${response.data.message}!`, { position: "top-right" });
+            setTitle(''); setStartDateTime(''); setEndDateTime(''); setSelectedProblems([]);
+
         } catch (error) {
             toast("Unauthorized request", { position: "top-right" })
             console.error('Error creating competition:', error);
@@ -98,6 +100,8 @@ const HostContest = () => {
                                     className="form-check-input"
                                     value={problem._id}
                                     onChange={handleProblemChange}
+                                    // Control the checked status based on selectedProblems state
+                                    checked={selectedProblems.includes(problem._id)}
                                 />
                                 <label className="form-check-label">{problem.title}</label>
                             </div>
